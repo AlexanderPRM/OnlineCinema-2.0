@@ -1,0 +1,34 @@
+@startuml Login
+title "Login"
+autonumber
+actor Client
+activate AuthAPI
+activate UserService
+database PostgreSQL
+database Redis
+
+Client -> AuthAPI: login/ [POST]
+AuthAPI -> UserService: Call login function
+UserService -> UserService: Validate email or login
+alt #LightBlue Request body correct.
+  UserService -> UserService: Hashing Password
+  activate PostgreSQL
+  UserService -> PostgreSQL: Check if user exists
+  PostgreSQL -> UserService: Result
+  deactivate PostgreSQL
+  alt #LightBlue Exist
+    UserService -> UserService: Generate JWT Tokens
+    activate Redis
+    UserService -> Redis: Write Refresh Token
+    Redis --> UserService: Status
+    deactivate Redis
+    UserService -> AuthAPI: Return Tokens
+    AuthAPI -> Client: Return and Write Tokens in Cookies
+  else #Pink Not exist
+    UserService -> AuthAPI: User Not Exist
+    AuthAPI -> Client: Validation Error
+  end
+else #Pink Request body is not correct.
+  AuthAPI -> Client: Validation Error.
+end
+@enduml

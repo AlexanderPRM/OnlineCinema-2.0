@@ -1,0 +1,34 @@
+@startuml register_handler
+title "Base Register"
+autonumber
+actor Client
+activate AuthAPI
+activate UserService
+database PostgreSQL
+database Redis
+
+Client -> AuthAPI: register/ [POST]
+AuthAPI -> UserService: Call register function
+UserService -> UserService: Validate email and login
+alt #LightBlue Request body correct.
+  activate PostgreSQL
+  UserService -> PostgreSQL: Check Duplicate
+  PostgreSQL -> UserService: Result
+  alt #LightBlue Not Exist
+    UserService -> UserService: Hashing password
+    UserService -> PostgreSQL: Create User
+    PostgreSQL -> UserService: OK.
+    UserService -> UserService: Generate JWT Tokens
+    UserService -> Redis: Write refresh_token
+    Redis --> UserService: Status
+    UserService -> AuthAPI: Return Tokens
+    AuthAPI -> Client: Return Tokens and write to Cookies
+  else #Pink Already Exist
+    UserService -> AuthAPI: User Already Exist
+    AuthAPI -> Client: Validation Error
+  end
+
+else #Pink Request body is not correct.
+  AuthAPI -> Client: Validation Error.
+end
+@enduml
