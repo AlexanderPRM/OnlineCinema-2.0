@@ -1,0 +1,2 @@
+SQLAlchemy[asyncio]==2.0.25
+asyncpg==0.29.0
