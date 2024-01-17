@@ -24,18 +24,20 @@ target_metadata = Base.metadata
 
 section = config.config_ini_section
 
-config.set_section_option(
-    section, 'POSTGRES_USER', os.environ.get('POSTGRES_USER'),
-)
-config.set_section_option(
-    section, 'POSTGRES_PASSWORD', os.environ.get('POSTGRES_PASSWORD'),
-)
-config.set_section_option(
-    section, 'POSTGRES_HOST', os.environ.get('POSTGRES_HOST'),
-)
-config.set_section_option(
-    section, 'POSTGRES_DB', os.environ.get('POSTGRES_DB'),
-)
+if os.environ.get('RELATIONAL_DB', 'postgres').lower() == 'postgres':
+    config.set_section_option(section, 'DB_DRIVER', 'postgresql+asyncpg')
+    config.set_section_option(
+        section, 'DB_USER', os.environ.get('POSTGRES_USER'),
+    )
+    config.set_section_option(
+        section, 'DB_PASSWORD', os.environ.get('POSTGRES_PASSWORD'),
+    )
+    config.set_section_option(
+        section, 'DB_HOST', os.environ.get('POSTGRES_HOST'),
+    )
+    config.set_section_option(
+        section, 'DB_NAME', os.environ.get('POSTGRES_DB'),
+    )
 
 
 def run_migrations_offline() -> None:

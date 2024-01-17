@@ -3,7 +3,6 @@
 import uuid
 from datetime import date, datetime
 from enum import Enum
-from typing import List
 
 import sqlalchemy as sa
 from sqlalchemy import orm as so
@@ -61,7 +60,7 @@ class Role(Base):
         server_onupdate=func.now(),
     )
 
-    users_service: so.Mapped[List['UserService']] = so.relationship(
+    users_service: so.Mapped[list['UserService']] = so.relationship(
         back_populates='role',
     )
 
@@ -122,7 +121,7 @@ class User(Base):
     user_service: so.Mapped['UserService'] = so.relationship(
         back_populates='user',
     )
-    login_history: so.Mapped[List['LoginHistory']] = so.relationship(
+    login_history: so.Mapped[list['LoginHistory']] = so.relationship(
         back_populates='user',
     )
 
@@ -174,7 +173,7 @@ class UserService(Base):
         """Human Readable representation magic method.
 
         Returns:
-            str: A human-readable string representation of the object.
+            str: A human-readable string representation of the object
         """
         return 'User "{0}" service info. User role - {1}'.format(
             self.user.email,
@@ -202,7 +201,6 @@ class LoginHistory(Base):
     """
 
     __tablename__ = 'login_history'
-
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey('user.id'))
     user_agent: so.Mapped[str] = so.mapped_column(sa.Text)
     login_date: so.Mapped[datetime] = so.mapped_column(

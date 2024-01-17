@@ -1,2 +1,4 @@
 [flake8]
 exclude = auth/migrations/*
+per-file-ignores =
+  auth/src/db/models.py:WPS226
