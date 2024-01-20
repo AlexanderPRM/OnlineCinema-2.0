@@ -1,6 +1,5 @@
 import asyncio
 import os
-from src.db.models import Base
 from logging.config import fileConfig
 
 from alembic import context
@@ -8,10 +7,12 @@ from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
+from src.db.models import Base
 
-
-if os.environ.get('PRODUCTION', 'false').lower() != 'true':
+if os.environ.get('production', 'false').lower() != 'true':
     load_dotenv('.env')
+else:
+    load_dotenv('.env.prod')
 
 config = context.config
 
@@ -24,19 +25,19 @@ target_metadata = Base.metadata
 
 section = config.config_ini_section
 
-if os.environ.get('RELATIONAL_DB', 'postgres').lower() == 'postgres':
+if os.environ.get('relational_db', 'postgres').lower() == 'postgres':
     config.set_section_option(section, 'DB_DRIVER', 'postgresql+asyncpg')
     config.set_section_option(
-        section, 'DB_USER', os.environ.get('POSTGRES_USER'),
+        section, 'DB_USER', os.environ.get('postgres_user'),
     )
     config.set_section_option(
-        section, 'DB_PASSWORD', os.environ.get('POSTGRES_PASSWORD'),
+        section, 'DB_PASSWORD', os.environ.get('postgres_password'),
     )
     config.set_section_option(
-        section, 'DB_HOST', os.environ.get('POSTGRES_HOST'),
+        section, 'DB_HOST', os.environ.get('postgres_host'),
     )
     config.set_section_option(
-        section, 'DB_NAME', os.environ.get('POSTGRES_DB'),
+        section, 'DB_NAME', os.environ.get('postgres_db'),
     )
 
 
