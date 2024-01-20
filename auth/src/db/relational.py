@@ -1,4 +1,4 @@
-"""Module with DataBase classes."""
+"""Module with Relational Database classes."""
 
 from abc import ABC, abstractmethod
 
