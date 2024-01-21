@@ -98,8 +98,8 @@ class User(Base):
     __tablename__ = 'user'
 
     # Ignore WPS432 (Magic Number) because max email length is 254 char.
-    email: so.Mapped[str] = so.mapped_column(sa.String(254))  # noqa: WPS432
-    login: so.Mapped[str] = so.mapped_column(sa.String(60))
+    email: so.Mapped[str] = so.mapped_column(sa.String(254), unique=True)
+    login: so.Mapped[str] = so.mapped_column(sa.String(60), unique=True)
     password: so.Mapped[str] = so.mapped_column(sa.String(100))
     user_service_id: so.Mapped[int] = so.mapped_column(
         sa.ForeignKey('user_service.id'),
