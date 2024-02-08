@@ -2,3 +2,7 @@ SQLAlchemy[asyncio]==2.0.25
 asyncpg==0.29.0
 alembic==1.13.1
 python-dotenv==1.0.0
+pydantic==2.6.0
+fastapi==0.109.0
+bcrypt==4.1.2
+backoff==2.2.1

@@ -2,10 +2,11 @@
 
 from contextlib import asynccontextmanager
 
+from api.v1 import roles, users
+from core.config import api_settings, database_settings
+from db import relational
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
-from src.core.config import api_settings, database_settings
-from src.db import relational
 
 
 @asynccontextmanager
@@ -20,7 +21,7 @@ async def lifespan(app: FastAPI):
         After yield when app is stop.
 
     """
-    postgres_dsn = 'postgres+asyncpg://{0}:{1}@{2}:{3}/{4}'.format(
+    postgres_dsn = 'postgresql+asyncpg://{0}:{1}@{2}:{3}/{4}'.format(
         database_settings.postgres_user,
         database_settings.postgres_password,
         database_settings.postgres_host,
@@ -29,7 +30,7 @@ async def lifespan(app: FastAPI):
     )
     relational.db = relational.PostgreSQL(postgres_dsn)
     yield
-    relational.db.dispose()
+    await relational.db.dispose()
 
 
 app = FastAPI(
@@ -37,6 +38,7 @@ app = FastAPI(
     version=api_settings.api_version,
     summary=api_settings.api_summary,
     description=api_settings.api_description,
+    lifespan=lifespan,
     docs_url='/api/openapi/',
     openapi_url='/api/openapi.json',
     license_info={
@@ -45,3 +47,6 @@ app = FastAPI(
     },
     default_response_class=ORJSONResponse,
 )
+
+app.include_router(users.router, prefix='/api/v1/users', tags=['users'])
+app.include_router(roles.router, prefix='/api/v1/roles', tags=['roles'])

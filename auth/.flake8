@@ -1,0 +1,4 @@
+[flake8]
+exclude = migrations/*
+per-file-ignores =
+  src/db/relational/models.py:WPS226,WPS432
