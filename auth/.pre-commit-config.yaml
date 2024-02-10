@@ -9,7 +9,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: mypy
+        entry: mypy --package app --namespace-packages
         language: python
         types: [python]
         verbose: true

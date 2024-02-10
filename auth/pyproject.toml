@@ -1,2 +1,8 @@
 [tool.mypy]
-mypy_path='./app/src:./app/tests'
+mypy_path = './src:./tests'
+ignore_missing_imports = true
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+skip_glob = "migrations/*"
