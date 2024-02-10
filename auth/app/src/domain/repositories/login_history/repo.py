@@ -21,7 +21,8 @@ class LoginHistoryRepository(ABC):
             entity (LoginHistory): entity of LoginHistory.
 
         Returns:
-            LoginHistory: LoginHistory class which represent login entry.
+            LoginHistory (class):
+            LoginHistory class which represent login entry.
         """
 
     @abstractmethod
@@ -32,7 +33,8 @@ class LoginHistoryRepository(ABC):
             login_entry_id (uuid.UUID): Login Entry UUID ID.
 
         Returns:
-            LoginHistory: LoginHistory class which represent login entry.
+            LoginHistory (class):
+            LoginHistory class which represent login entry.
         """
 
     @abstractmethod
@@ -43,5 +45,6 @@ class LoginHistoryRepository(ABC):
             uid (uuid.UUID): User UUID ID.
 
         Returns:
-            LoginHistory: LoginHistory classs which represent login entry.
+            LoginHistory (class):
+            LoginHistory classs which represent login entry.
         """

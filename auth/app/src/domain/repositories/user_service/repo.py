@@ -34,7 +34,8 @@ class UserServiceRepository(ABC):
             uid (uuid.UUID): User UUID ID.
 
         Returns:
-            UserService: User Service class which represent user service.
+            UserService (class):
+            User Service class which represent user service.
         """
 
     @abstractmethod
@@ -48,7 +49,8 @@ class UserServiceRepository(ABC):
             active_status (bool): New User active status.
 
         Returns:
-            UserService: User Service class which represent user service.
+            UserService (class):
+            User Service class which represent user service.
         """
 
     @abstractmethod
@@ -62,7 +64,8 @@ class UserServiceRepository(ABC):
             verified_status (bool): New User verified status.
 
         Returns:
-            UserService: User Service class which represent user service.
+            UserService (class):
+            User Service class which represent user service.
         """
 
     @abstractmethod
@@ -74,5 +77,6 @@ class UserServiceRepository(ABC):
             role (Role): Entity of class Role which represent Role.
 
         Returns:
-            UserService: User Service which represent user service.
+            UserService (class):
+            User Service which represent user service.
         """

@@ -35,7 +35,7 @@ class SocialNetworkRepository(ABC):
             social_network_id (uuid.UUID): Social Network UUID ID.
 
         Returns:
-            SocialNetwork: New Social Network class
+            SocialNetwork (class): New Social Network class
             with new info of created object.
         """
 

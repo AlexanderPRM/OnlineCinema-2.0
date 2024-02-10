@@ -21,7 +21,7 @@ class UserSocialAccountRepository(ABC):
             entity (UserSocialAccount): entity of UserSocialAccount.
 
         Returns:
-            UserSocialAccount:
+            UserSocialAccount (class):
             UserSocialAccount class which represent User Social Account.
         """
 
@@ -35,7 +35,7 @@ class UserSocialAccountRepository(ABC):
             user_social_account_id (uuid.UUID): User Social Account UUID ID.
 
         Returns:
-            UserSocialAccount:
+            UserSocialAccount (class):
             UserSocialAccount class which represent User Social Account.
         """
     @abstractmethod
@@ -48,7 +48,7 @@ class UserSocialAccountRepository(ABC):
             uid (uuid.UUID): User UUID ID.
 
         Returns:
-            UserSocialAccount: list of Users Social Accounts.
+            UserSocialAccount (class): list of Users Social Accounts.
         """
 
     @abstractmethod
@@ -61,5 +61,5 @@ class UserSocialAccountRepository(ABC):
             social_network_id (uuid.UUID): Social Network UUID ID.
 
         Returns:
-            list[UserSocialAccount]: list of Users Social Accounts.
+            UserSocialAccount (class): list of Users Social Accounts.
         """

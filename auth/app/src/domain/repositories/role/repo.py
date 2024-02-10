@@ -22,7 +22,7 @@ class RoleRepository(ABC):
             role (Role): entity of Role class.
 
         Returns:
-            Role: New Role class with new created role object info.
+            Role (class): New Role class with new created role object info.
         """
 
     @abstractmethod
@@ -44,7 +44,7 @@ class RoleRepository(ABC):
             name (str): Role name.
 
         Returns:
-            Role: Role class which represent role.
+            Role (class): Role class which represent role.
         """
 
     @abstractmethod
@@ -58,7 +58,7 @@ class RoleRepository(ABC):
             access_level (AccessLevel): Entity of Access Level enum.
 
         Returns:
-            Role: Role class which represent role.
+            Role (class): Role class which represent role.
         """
 
     @abstractmethod
@@ -72,5 +72,5 @@ class RoleRepository(ABC):
             description (str): New description.
 
         Returns:
-            Role: Role class which represent role.
+            Role (class): Role class which represent role.
         """
