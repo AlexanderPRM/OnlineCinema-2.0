@@ -6,8 +6,8 @@ import uuid
 from datetime import UTC, datetime
 from typing import Optional
 
-from src.domain.base import Base
-from src.domain.role.dto import AccessLevel, RoleDTO
+from domain.base import Base
+from domain.role.dto import AccessLevel, RoleDTO
 
 
 class Role(Base):

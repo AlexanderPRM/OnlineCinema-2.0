@@ -5,8 +5,9 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime
 
-from src.domain.base import Base
-from src.domain.user_service.dto import UserServiceDTO
+from domain.base import Base
+from domain.role.dto import RoleDTO
+from domain.user_service.dto import UserServiceDTO
 
 
 class UserService(Base):
@@ -16,17 +17,20 @@ class UserService(Base):
         Base (class): Base representing class.
     """
 
-    def __init__(self, entity: UserServiceDTO) -> None:
+    def __init__(self, entity: UserServiceDTO, role_entity: RoleDTO) -> None:
         """Init method.
 
         Args:
             entity (UserServiceDTO): Data Transfer Object of User Service.
+            role_entity (RoleDTO): Data Transfer Object of Role.
         """
         self._id = entity.id
         self._role_id = entity.role_id
         self._active = entity.active
         self._verified = entity.verified
         self._date_joined = entity.date_joined
+
+        self._role = role_entity
 
     @classmethod
     def create(
