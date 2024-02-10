@@ -49,7 +49,7 @@ class User(Base):
         email: str,
         login: str,
         password: str,
-        user_service_id: uuid.UUID,
+        user_service: UserServiceDTO,
     ) -> User:
         """Create User class which represent a user object.
 
@@ -57,7 +57,7 @@ class User(Base):
             email (str): User email.
             login (str): User login.
             password (str): User password.
-            user_service_id (UUID): UUID identifier to user service.
+            user_service (UserServiceDTO): entity of UserServiceDTO.
 
         Returns:
             User (class): Return created class.
@@ -68,9 +68,10 @@ class User(Base):
                 email=email,
                 login=login,
                 password=password,
-                user_service_id=user_service_id,
+                user_service_id=user_service.id,
                 updated_at=datetime.now(UTC),
             ),
+            user_service_entity=user_service,
         )
 
     def change_email(self, email: str) -> None:

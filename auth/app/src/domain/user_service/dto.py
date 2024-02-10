@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 
-from src.domain.base import BaseDTO
+from domain.base import BaseDTO
 
 
 class UserServiceDTO(BaseDTO):
