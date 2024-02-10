@@ -35,5 +35,5 @@ class UserDTO(BaseDTO):
             str, pd.StringConstraints(max_length=24, strip_whitespace=True),
         ]
     ] = None
-    bio: Annotated[str, pd.StringConstraints(max_length=1000)] = None
+    bio: Optional[Annotated[str, pd.StringConstraints(max_length=1000)]] = None
     updated_at: datetime
