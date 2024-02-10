@@ -35,14 +35,14 @@ class UserService(Base):
     @classmethod
     def create(
         cls,
-        role: RoleDTO,
+        role_id: uuid.UUID,
         is_active: bool = True,
         verified: bool = False,
     ) -> UserService:
         """Create User Service class which represent a user service object.
 
         Args:
-            role (RoleDTO): Entity of RoleDTO.
+            role_id (UUID): Role UUID.
             is_active (bool): Is the user account active.
             verified (bool): Is the user account verified.
 
@@ -52,12 +52,11 @@ class UserService(Base):
         return cls(
             entity=UserServiceDTO(
                 id=uuid.uuid4(),
-                role_id=role.id,
-                active=is_active,
+                role_id=role_id,
+                is_active=is_active,
                 verified=verified,
                 date_joined=datetime.now(UTC),
             ),
-            role_entity=role,
         )
 
     def change_role(self, role_id: uuid.UUID) -> None:

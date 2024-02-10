@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import uuid
-from datetime import UTC, datetime
 
 from domain.base import Base
 from domain.social_network.dto import SocialNetworkDTO
@@ -22,7 +21,7 @@ class UserSocialAccount(Base):
         self,
         entity: UserSocialAccountDTO,
         user_entity: UserDTO,
-        social_network_entity: SocialNetworkDTO,
+        social_network: SocialNetworkDTO,
     ) -> None:
         """Init method.
 
@@ -30,7 +29,7 @@ class UserSocialAccount(Base):
             entity (UserSocialAccountDTO):
             Data Transfer Object of User Account Network.
             user_entity (UserDTO): Data Transfer Object of User.
-            social_network_entity (SocialNetworkDTO):
+            social_network (SocialNetworkDTO):
             Data Transfer Object of Social Network.
         """
         self._id = entity
@@ -39,21 +38,21 @@ class UserSocialAccount(Base):
         self._social_account_id = entity.social_account_id
         self._created_at = entity.created_at
 
-        self._user_entity = user_entity
-        self._social_network_entity = social_network_entity
+        self._user = UserDTO
+        self._social_network = SocialNetworkDTO
 
     @classmethod
     def create(
         cls,
-        user: UserDTO,
-        social_network: SocialNetworkDTO,
+        social_network_id: uuid.UUID,
+        user_id: uuid.UUID,
         social_account_id: str,
     ) -> UserSocialAccount:
         """Create User Social Account class which represent a user social account object. # noqa: E501,D400
 
         Args:
-            user (UserDTO): Entity of UserDTO.
-            social_network (SocialNetworkDTO): Entity of SocialNetworkDTO.
+            social_network_id (uuid.UUID): UUID identifier of social network.
+            user_id (uuid.UUID): UUID identifier of user.
             social_account_id (str): identifier of user social account.
 
         Returns:
@@ -62,11 +61,8 @@ class UserSocialAccount(Base):
         return cls(
             entity=UserSocialAccountDTO(
                 id=uuid.uuid4(),
-                social_network_id=social_network.id,
-                user_id=user.id,
+                social_network_id=social_network_id,
+                user_id=user_id,
                 social_account_id=social_account_id,
-                created_at=datetime.now(UTC),
             ),
-            user_entity=user,
-            social_network_entity=social_network,
         )
