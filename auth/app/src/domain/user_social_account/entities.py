@@ -5,6 +5,8 @@ from __future__ import annotations
 import uuid
 
 from domain.base import Base
+from domain.social_network.dto import SocialNetworkDTO
+from domain.user.dto import UserDTO
 from domain.user_social_account.dto import UserSocialAccountDTO
 
 
@@ -15,18 +17,29 @@ class UserSocialAccount(Base):
         Base (class): Base representing class.
     """
 
-    def __init__(self, entity: UserSocialAccountDTO) -> None:
+    def __init__(
+        self,
+        entity: UserSocialAccountDTO,
+        user_entity: UserDTO,
+        social_network: SocialNetworkDTO,
+    ) -> None:
         """Init method.
 
         Args:
-            entity (UserSocialAccountDTO): Data Transfer Object of
-                User Account Network.
+            entity (UserSocialAccountDTO):
+            Data Transfer Object of User Account Network.
+            user_entity (UserDTO): Data Transfer Object of User.
+            social_network (SocialNetworkDTO):
+            Data Transfer Object of Social Network.
         """
         self._id = entity
         self._social_network_id = entity.social_network_id
         self._user_id = entity.user_id
         self._social_account_id = entity.social_account_id
         self._created_at = entity.created_at
+
+        self._user = UserDTO
+        self._social_network = SocialNetworkDTO
 
     @classmethod
     def create(

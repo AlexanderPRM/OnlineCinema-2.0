@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from domain.base import Base
 from domain.user.dto import UserDTO
 from domain.user.value_objects import UserAdditionalFields
+from domain.user_service.dto import UserServiceDTO
 
 
 class User(Base):
@@ -17,23 +18,30 @@ class User(Base):
         Base (class): Base representing class.
     """
 
-    def __init__(self, entity: UserDTO) -> None:
+    def __init__(
+        self, entity: UserDTO, user_service_entity: UserServiceDTO,
+    ) -> None:
         """Init method.
 
         Args:
             entity (UserDTO): Data Transfer Object of User.
+            user_service_entity (UserServiceDTO):
+            Data Transfer Object of User Service.
 
         """
         self._id = entity.id
         self._email = entity.email
         self._login = entity.login
         self._password = entity.password
+        self._user_service_id = entity.user_service_id
         self._full_name = entity.full_name
         self._profile_picture = entity.profile_picture
         self._birthday = entity.birthday
         self._phone_number = entity.phone_number
         self._bio = entity.bio
         self._updated_at = entity.updated_at
+
+        self._user_service = user_service_entity
 
     @classmethod
     def create(
