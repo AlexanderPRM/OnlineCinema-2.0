@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import uuid
+from pathlib import Path
 
 from domain.base import Base
 from domain.social_network.dto import SocialNetworkDTO
@@ -26,11 +27,11 @@ class SocialNetwork(Base):
         self._name = entity.name
 
     @classmethod
-    def create(cls, picture_file_path: str, name: str) -> SocialNetwork:
+    def create(cls, picture_file_path: Path, name: str) -> SocialNetwork:
         """Create Social Network class which represent a social network.
 
         Args:
-            picture_file_path (str): File path to social network icon.
+            picture_file_path (Path): File path to social network icon.
             name (str): Social Network name.
 
         Returns:
@@ -44,10 +45,10 @@ class SocialNetwork(Base):
             ),
         )
 
-    def change_picture(self, picture_file_path: str) -> None:
+    def change_picture(self, picture_file_path: Path) -> None:
         """Change social network icon.
 
         Args:
-            picture_file_path (str): File path to new social network icon.
+            picture_file_path (Path): File path to new social network icon.
         """
         self._picture = picture_file_path

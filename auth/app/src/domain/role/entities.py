@@ -31,11 +31,17 @@ class Role(Base):
         self._updated_at = entity.updated_at
 
     @classmethod
-    def create(cls, name: str, description: Optional[str] = '') -> Role:
+    def create(
+        cls,
+        name: str,
+        access_level: AccessLevel,
+        description: Optional[str] = '',
+    ) -> Role:
         """Create Role class which represent a role object.
 
         Args:
             name (str): Role name.
+            access_level (AccessLevel): Role Access level.
             description (str): Role description.
 
         Returns:
@@ -46,6 +52,7 @@ class Role(Base):
                 id=uuid.uuid4(),
                 name=name,
                 description=description,
+                access_level=access_level,
                 created_at=datetime.now(UTC),
                 updated_at=datetime.now(UTC),
             ),
