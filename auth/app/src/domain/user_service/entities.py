@@ -6,7 +6,7 @@ import uuid
 from datetime import UTC, datetime
 
 from domain.base import Base
-from domain.role.dto import RoleDTO
+from domain.role.entities import Role
 from domain.user_service.dto import UserServiceDTO
 
 
@@ -17,32 +17,33 @@ class UserService(Base):
         Base (class): Base representing class.
     """
 
-    def __init__(self, entity: UserServiceDTO, role_entity: RoleDTO) -> None:
+    def __init__(self, entity: UserServiceDTO, role: Role) -> None:
         """Init method.
 
         Args:
             entity (UserServiceDTO): Data Transfer Object of User Service.
-            role_entity (RoleDTO): Data Transfer Object of Role.
+            role (Role): Entity of Role.
         """
-        self._id = entity.id
+        self.id = entity.id
+
         self._role_id = entity.role_id
         self._active = entity.active
         self._verified = entity.verified
         self._date_joined = entity.date_joined
 
-        self._role = role_entity
+        self.role = role
 
     @classmethod
     def create(
         cls,
-        role: RoleDTO,
+        role: Role,
         is_active: bool = True,
         verified: bool = False,
     ) -> UserService:
         """Create User Service class which represent a user service object.
 
         Args:
-            role (RoleDTO): Entity of RoleDTO.
+            role (Role): Entity of Role.
             is_active (bool): Is the user account active.
             verified (bool): Is the user account verified.
 
@@ -57,16 +58,17 @@ class UserService(Base):
                 verified=verified,
                 date_joined=datetime.now(UTC),
             ),
-            role_entity=role,
+            role=role,
         )
 
-    def change_role(self, role_id: uuid.UUID) -> None:
+    def change_role(self, role: Role) -> None:
         """Change the User role.
 
         Args:
-            role_id (uuid.UUID): UUID identifier to Role.
+            role (Role): Entity of Role.
         """
-        self._role_id = role_id
+        self._role_id = role.id
+        self.role = role
 
     def is_verified(self) -> bool:
         """Return the user verification status.

@@ -7,7 +7,8 @@ from datetime import UTC, datetime
 from typing import Optional
 
 from domain.base import Base
-from domain.role.dto import AccessLevel, RoleDTO
+from domain.role.dto import RoleDTO
+from domain.role.value_objects import AccessLevel
 
 
 class Role(Base):
@@ -23,7 +24,8 @@ class Role(Base):
         Args:
             entity (RoleDTO): Data Transfer Object of Role.
         """
-        self._id = entity.id
+        self.id = entity.id
+
         self._name = entity.name
         self._description = entity.description
         self._access_level = entity.access_level

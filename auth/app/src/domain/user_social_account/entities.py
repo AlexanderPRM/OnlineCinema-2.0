@@ -6,8 +6,8 @@ import uuid
 from datetime import UTC, datetime
 
 from domain.base import Base
-from domain.social_network.dto import SocialNetworkDTO
-from domain.user.dto import UserDTO
+from domain.social_network.entities import SocialNetwork
+from domain.user.entities import User
 from domain.user_social_account.dto import UserSocialAccountDTO
 
 
@@ -21,39 +21,39 @@ class UserSocialAccount(Base):
     def __init__(
         self,
         entity: UserSocialAccountDTO,
-        user_entity: UserDTO,
-        social_network_entity: SocialNetworkDTO,
+        user: User,
+        social_network: SocialNetwork,
     ) -> None:
         """Init method.
 
         Args:
             entity (UserSocialAccountDTO):
             Data Transfer Object of User Account Network.
-            user_entity (UserDTO): Data Transfer Object of User.
-            social_network_entity (SocialNetworkDTO):
-            Data Transfer Object of Social Network.
+            user (User): Entity of User.
+            social_network (SocialNetwork): Entity of Social Network.
         """
-        self._id = entity
+        self.id = entity
+
         self._social_network_id = entity.social_network_id
         self._user_id = entity.user_id
         self._social_account_id = entity.social_account_id
         self._created_at = entity.created_at
 
-        self._user_entity = user_entity
-        self._social_network_entity = social_network_entity
+        self.user = user
+        self.social = social_network
 
     @classmethod
     def create(
         cls,
-        user: UserDTO,
-        social_network: SocialNetworkDTO,
+        user: User,
+        social_network: SocialNetwork,
         social_account_id: str,
     ) -> UserSocialAccount:
         """Create User Social Account class which represent a user social account object. # noqa: E501,D400
 
         Args:
-            user (UserDTO): Entity of UserDTO.
-            social_network (SocialNetworkDTO): Entity of SocialNetworkDTO.
+            user (User): Entity of User.
+            social_network (SocialNetwork): Entity of SocialNetwork.
             social_account_id (str): identifier of user social account.
 
         Returns:
@@ -67,6 +67,6 @@ class UserSocialAccount(Base):
                 social_account_id=social_account_id,
                 created_at=datetime.now(UTC),
             ),
-            user_entity=user,
-            social_network_entity=social_network,
+            user=user,
+            social_network=social_network,
         )
