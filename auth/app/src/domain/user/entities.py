@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from domain.base import Base
 from domain.user.dto import UserDTO
 from domain.user.value_objects import UserAdditionalFields
-from domain.user_service.dto import UserServiceDTO
+from domain.user_service.entities import UserService
 
 
 class User(Base):
@@ -19,17 +19,17 @@ class User(Base):
     """
 
     def __init__(
-        self, entity: UserDTO, user_service_entity: UserServiceDTO,
+        self, entity: UserDTO, user_service: UserService,
     ) -> None:
         """Init method.
 
         Args:
             entity (UserDTO): Data Transfer Object of User.
-            user_service_entity (UserServiceDTO):
-            Data Transfer Object of User Service.
+            user_service (UserService): Entity of User Service.
 
         """
-        self._id = entity.id
+        self.id = entity.id
+
         self._email = entity.email
         self._login = entity.login
         self._password = entity.password
@@ -41,7 +41,7 @@ class User(Base):
         self._bio = entity.bio
         self._updated_at = entity.updated_at
 
-        self._user_service = user_service_entity
+        self.user_service = user_service
 
     @classmethod
     def create(
@@ -49,7 +49,7 @@ class User(Base):
         email: str,
         login: str,
         password: str,
-        user_service: UserServiceDTO,
+        user_service: UserService,
     ) -> User:
         """Create User class which represent a user object.
 
@@ -57,7 +57,7 @@ class User(Base):
             email (str): User email.
             login (str): User login.
             password (str): User password.
-            user_service (UserServiceDTO): entity of UserServiceDTO.
+            user_service (UserService): entity of UserService.
 
         Returns:
             User (class): Return created class.
@@ -71,7 +71,7 @@ class User(Base):
                 user_service_id=user_service.id,
                 updated_at=datetime.now(UTC),
             ),
-            user_service_entity=user_service,
+            user_service=user_service,
         )
 
     def change_email(self, email: str) -> None:

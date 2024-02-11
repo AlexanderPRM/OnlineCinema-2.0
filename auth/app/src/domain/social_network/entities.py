@@ -22,7 +22,8 @@ class SocialNetwork(Base):
         Args:
             entity (SocialNetworkDTO): Data Transfer Object of Social Network.
         """
-        self._id = entity.id
+        self.id = entity.id
+
         self._picture = entity.picture
         self._name = entity.name
 
