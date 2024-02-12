@@ -7,7 +7,7 @@ from domain.role.entities import Role
 from domain.user_service.entities import UserService
 
 
-class UserServiceRepository(ABC):
+class IUserServiceRepository(ABC):
     """Repository with User Service objects.
 
     Args:

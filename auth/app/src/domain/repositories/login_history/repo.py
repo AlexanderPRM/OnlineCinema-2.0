@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from domain.login_history.entities import LoginHistory
 
 
-class LoginHistoryRepository(ABC):
+class ILoginHistoryRepository(ABC):
     """Repository with Login History Repository.
 
     Args:

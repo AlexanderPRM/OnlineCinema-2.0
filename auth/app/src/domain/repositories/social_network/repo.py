@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from domain.social_network.entities import SocialNetwork
 
 
-class SocialNetworkRepository(ABC):
+class ISocialNetworkRepository(ABC):
     """Repository with Social Network objects.
 
     Args:

@@ -7,7 +7,7 @@ from domain.role.entities import Role
 from domain.role.value_objects import AccessLevel
 
 
-class RoleRepository(ABC):
+class IRoleRepository(ABC):
     """Repository with Role objects.
 
     Args:

@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from domain.user_social_account.entities import UserSocialAccount
 
 
-class UserSocialAccountRepository(ABC):
+class IUserSocialAccountRepository(ABC):
     """Repository with User Social Account objects.
 
     Args:

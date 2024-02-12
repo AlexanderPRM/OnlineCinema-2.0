@@ -7,7 +7,7 @@ from domain.user.entities import User
 from domain.user.value_objects import UserAdditionalFields
 
 
-class UserRepository(ABC):  # noqa: WPS214
+class IUserRepository(ABC):  # noqa: WPS214
     """Repository with User objects.
 
     Args:
