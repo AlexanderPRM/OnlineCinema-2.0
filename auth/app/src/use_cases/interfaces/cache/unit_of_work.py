@@ -1,4 +1,4 @@
-"""Module with class for work with Database."""
+"""Module with class for work with Tokens."""
 
 from __future__ import annotations
 
@@ -6,13 +6,9 @@ from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import Optional, Type
 
-from domain.repositories.login_history.repo import ILoginHistoryRepository
-from domain.repositories.role.repo import IRoleRepository
-from domain.repositories.social_network.repo import ISocialNetworkRepository
-from domain.repositories.user.repo import IUserRepository
-from domain.repositories.user_service.repo import IUserServiceRepository
-from domain.repositories.user_social_account.repo import (
-    IUserSocialAccountRepository,
+from app.src.use_cases.interfaces.cache.tokens.repo import (
+    IAccessTokenRepository,
+    IRefreshTokenRepository,
 )
 
 
@@ -25,23 +21,19 @@ class AbstractUnitOfWork(ABC):
         ABC (class): Used to create an abstract class.
     """
 
-    user: IUserRepository
-    user_service: IUserServiceRepository
-    role: IRoleRepository
-    login_history: ILoginHistoryRepository
-    social_network: ISocialNetworkRepository
-    user_social_account: IUserSocialAccountRepository
+    access_token: IAccessTokenRepository
+    refresh_token: IRefreshTokenRepository
 
-    def __call__(self, autocommit: bool) -> AbstractUnitOfWork:
+    def __call__(self, transaction: bool) -> AbstractUnitOfWork:
         """Magic method responsible for the logic when calling class.
 
         Args:
-            autocommit (bool): Do autcommit in session or not.
+            transaction (bool): Do command in Transaction or not.
 
         Returns:
             AbstractUnitOfWork: Return itself.
         """
-        self._autocommit = autocommit
+        self._transaction = transaction
         return self
 
     async def __aenter__(self) -> AbstractUnitOfWork:
@@ -70,24 +62,16 @@ class AbstractUnitOfWork(ABC):
         Returns:
             bool: Has error.
         """
-        if any((exc_type, exc_tb, exc_val)):
-            await self._rollback()
+        if any((exc_type, exc_val, exc_tb)):
+            await self._discard()
             return False
-
-        if self._autocommit:
-            await self._commit()
-
-        await self._close()
+        await self._execute()
         return True
 
     @abstractmethod
-    async def _commit(self) -> None:
-        """Commit Transaction."""
+    async def _execute(self) -> None:
+        """Send commands to storage."""
 
     @abstractmethod
-    async def _rollback(self) -> None:
-        """Roll backs changes."""
-
-    @abstractmethod
-    async def _close(self) -> None:
-        """Close Session."""
+    async def _discard(self) -> None:
+        """Cancel the transaction."""

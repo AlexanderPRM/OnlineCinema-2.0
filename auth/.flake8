@@ -1,4 +1,5 @@
 [flake8]
 exclude = migrations/*
 per-file-ignores =
-  src/db/relational/models.py:WPS226,WPS432
+  # Use Cases without parent class.
+  app/src/use_cases/user/*.py: WPS306
