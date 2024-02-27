@@ -1,6 +1,7 @@
 """Module with social network DTO."""
 
-from typing import Optional
+from datetime import datetime
+from typing import Annotated, Optional
 
 import pydantic as pd
 from domain.base import BaseDTO
@@ -14,4 +15,8 @@ class SocialNetworkDTO(BaseDTO):
     """
 
     picture: Optional[pd.FilePath] = None
-    name: str
+    name: Annotated[
+        str, pd.StringConstraints(strip_whitespace=True, max_length=24),
+    ]
+    created_at: datetime
+    updated_at: datetime

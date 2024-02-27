@@ -36,4 +36,5 @@ class UserDTO(BaseDTO):
         ]
     ] = None
     bio: Optional[Annotated[str, pd.StringConstraints(max_length=1000)]] = None
+    created_at: datetime
     updated_at: datetime

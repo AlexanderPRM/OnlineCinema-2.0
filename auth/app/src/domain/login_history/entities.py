@@ -33,7 +33,8 @@ class LoginHistory(Base):
 
         self._user_agent = entity.user_agent
         self._social_network_id = entity.social_network_id
-        self._login_date = entity.login_date
+        self._created_at = entity.created_at
+        self._updated_at = entity.updated_at
 
         self.social_network = social_network
 
@@ -62,7 +63,8 @@ class LoginHistory(Base):
                 social_network_id=(
                     social_network.id if social_network else None
                 ),
-                login_date=datetime.now(UTC),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             social_network=social_network,
         )

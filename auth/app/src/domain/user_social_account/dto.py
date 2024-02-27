@@ -17,3 +17,4 @@ class UserSocialAccountDTO(BaseDTO):
     user_id: uuid.UUID
     social_account_id: str
     created_at: datetime
+    updated_at: datetime

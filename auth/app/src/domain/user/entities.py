@@ -39,6 +39,7 @@ class User(Base):
         self._birthday = entity.birthday
         self._phone_number = entity.phone_number
         self._bio = entity.bio
+        self._created_at = entity.created_at
         self._updated_at = entity.updated_at
 
         self.user_service = user_service
@@ -69,6 +70,7 @@ class User(Base):
                 login=login,
                 password=password,
                 user_service_id=user_service.id,
+                created_at=datetime.now(UTC),
                 updated_at=datetime.now(UTC),
             ),
             user_service=user_service,
