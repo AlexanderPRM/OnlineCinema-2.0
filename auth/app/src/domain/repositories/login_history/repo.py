@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from domain.login_history.entities import LoginHistory
 
 
-class LoginHistoryRepository(ABC):
+class ILoginHistoryRepository(ABC):
     """Repository with Login History Repository.
 
     Args:
@@ -26,15 +26,17 @@ class LoginHistoryRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve_by_id(self, login_entry_id: uuid.UUID) -> LoginHistory:
+    async def retrieve_by_id(
+        self,
+        login_entry_id: uuid.UUID,
+    ) -> LoginHistory | None:
         """Retrieve login entry by id.
 
         Args:
             login_entry_id (uuid.UUID): Login Entry UUID ID.
 
         Returns:
-            LoginHistory (class):
-            LoginHistory class which represent login entry.
+            LoginHistory | None: Return Login Entry if exists.
         """
 
     @abstractmethod

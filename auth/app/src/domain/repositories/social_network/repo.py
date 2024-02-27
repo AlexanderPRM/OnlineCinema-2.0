@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from domain.social_network.entities import SocialNetwork
 
 
-class SocialNetworkRepository(ABC):
+class ISocialNetworkRepository(ABC):
     """Repository with Social Network objects.
 
     Args:
@@ -28,27 +28,25 @@ class SocialNetworkRepository(ABC):
     @abstractmethod
     async def retrieve_by_id(
         self, social_network_id: uuid.UUID,
-    ) -> SocialNetwork:
+    ) -> SocialNetwork | None:
         """Retrieve social network by id.
 
         Args:
             social_network_id (uuid.UUID): Social Network UUID ID.
 
         Returns:
-            SocialNetwork (class): New Social Network class
-            with new info of created object.
+            SocialNetwork | None: Return Social Network if exists.
         """
 
     @abstractmethod
-    async def retrieve_by_name(self, name: str) -> SocialNetwork:
+    async def retrieve_by_name(self, name: str) -> SocialNetwork | None:
         """Retrieve social network by name.
 
         Args:
             name (str): Name of social network.
 
         Returns:
-            SocialNetwork: New Social Network class
-            with new info of created object.
+            SocialNetwork: Retrieve Social Network if exists.
         """
 
     @abstractmethod

@@ -7,7 +7,7 @@ from domain.role.entities import Role
 from domain.role.value_objects import AccessLevel
 
 
-class RoleRepository(ABC):
+class IRoleRepository(ABC):
     """Repository with Role objects.
 
     Args:
@@ -26,25 +26,25 @@ class RoleRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve_by_id(self, role_id: uuid.UUID) -> Role:
+    async def retrieve_by_id(self, role_id: uuid.UUID) -> Role | None:
         """Retrieve role by role ID from storage.
 
         Args:
             role_id (uuid.UUID): Role UUID ID.
 
         Returns:
-            Role (class): Role class which represent role.
+            Role | None: Return Role if exists.
         """
 
     @abstractmethod
-    async def retrieve_by_name(self, name: str) -> Role:
+    async def retrieve_by_name(self, name: str) -> Role | None:
         """Retrieve role by role name from storage.
 
         Args:
             name (str): Role name.
 
         Returns:
-            Role (class): Role class which represent role.
+            Role | None: Return Role if exists.
         """
 
     @abstractmethod

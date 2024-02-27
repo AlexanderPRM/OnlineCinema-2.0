@@ -16,4 +16,5 @@ class UserServiceDTO(BaseDTO):
     role_id: uuid.UUID
     active: bool
     verified: bool
-    date_joined: datetime
+    created_at: datetime
+    updated_at: datetime

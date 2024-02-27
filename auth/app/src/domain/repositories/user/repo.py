@@ -7,7 +7,7 @@ from domain.user.entities import User
 from domain.user.value_objects import UserAdditionalFields
 
 
-class UserRepository(ABC):  # noqa: WPS214
+class IUserRepository(ABC):  # noqa: WPS214
     """Repository with User objects.
 
     Args:
@@ -26,36 +26,52 @@ class UserRepository(ABC):  # noqa: WPS214
         """
 
     @abstractmethod
-    async def retrieve_by_id(self, uid: uuid.UUID) -> User:
+    async def retrieve_by_id(self, uid: uuid.UUID) -> User | None:
         """Get user by user ID from storage.
 
         Args:
             uid (uuid.UUID): User UUID ID.
 
         Returns:
-            User (class): User class which represent user.
+            User | None: Return User if exists.
         """
 
     @abstractmethod
-    async def retrieve_by_email(self, email: str) -> User:
+    async def retrieve_by_email(self, email: str) -> User | None:
         """Retrieve user by email from storage.
 
         Args:
             email (str): User electronic mail address.
 
         Returns:
-            User (class): User class which represent user.
+            User | None: Return User if exists.
         """
 
     @abstractmethod
-    async def retrieve_by_login(self, login: str) -> User:
+    async def retrieve_by_login(self, login: str) -> User | None:
         """Retrieve user by login from storage.
 
         Args:
             login (str): User login.
 
         Returns:
-            User (class): User class which represent user.
+            User | None: Return User if exists.
+        """
+
+    @abstractmethod
+    async def retrieve_by_email_or_login(
+        self,
+        email: str,
+        login: str,
+    ) -> User | None:
+        """Retrieve user by login or email from storage.
+
+        Args:
+            email (str): User electronic mail address.
+            login (str): User login.
+
+        Returns:
+            User | None: Return User if exists.
         """
 
     @abstractmethod

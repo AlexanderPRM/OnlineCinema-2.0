@@ -38,6 +38,7 @@ class UserSocialAccount(Base):
         self._user_id = entity.user_id
         self._social_account_id = entity.social_account_id
         self._created_at = entity.created_at
+        self._updated_at = entity.updated_at
 
         self.user = user
         self.social = social_network
@@ -66,6 +67,7 @@ class UserSocialAccount(Base):
                 user_id=user.id,
                 social_account_id=social_account_id,
                 created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             user=user,
             social_network=social_network,

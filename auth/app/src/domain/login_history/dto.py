@@ -17,4 +17,5 @@ class LoginHistoryDTO(BaseDTO):
     user_id: uuid.UUID
     user_agent: str
     social_network_id: Optional[uuid.UUID] = None
-    login_date: datetime
+    created_at: datetime
+    updated_at: datetime

@@ -27,9 +27,10 @@ class UserService(Base):
         self.id = entity.id
 
         self._role_id = entity.role_id
-        self._active = entity.active
-        self._verified = entity.verified
-        self._date_joined = entity.date_joined
+        self._active: bool = entity.active
+        self._verified: bool = entity.verified
+        self._created_at = entity.created_at
+        self._updated_at = entity.updated_at
 
         self.role = role
 
@@ -56,7 +57,8 @@ class UserService(Base):
                 role_id=role.id,
                 active=is_active,
                 verified=verified,
-                date_joined=datetime.now(UTC),
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
             role=role,
         )

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import uuid
+from datetime import UTC, datetime
 from pathlib import Path
 
 from domain.base import Base
@@ -26,6 +27,8 @@ class SocialNetwork(Base):
 
         self._picture = entity.picture
         self._name = entity.name
+        self._created_at = entity.created_at
+        self._updated_at = entity.updated_at
 
     @classmethod
     def create(cls, picture_file_path: Path, name: str) -> SocialNetwork:
@@ -43,6 +46,8 @@ class SocialNetwork(Base):
                 id=uuid.uuid4(),
                 picture=picture_file_path,
                 name=name,
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             ),
         )
 
