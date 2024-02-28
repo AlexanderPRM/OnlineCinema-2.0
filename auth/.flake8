@@ -1,5 +1,0 @@
-[flake8]
-exclude = migrations/*
-per-file-ignores =
-  # Use Cases without parent class.
-  app/src/use_cases/user/*.py: WPS306
