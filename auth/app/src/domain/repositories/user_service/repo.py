@@ -3,8 +3,8 @@
 import uuid
 from abc import ABC, abstractmethod
 
-from domain.role.entities import Role
-from domain.user_service.entities import UserService
+from src.domain.role.entities import Role
+from src.domain.user_service.entities import UserService
 
 
 class IUserServiceRepository(ABC):

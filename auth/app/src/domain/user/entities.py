@@ -5,10 +5,10 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime
 
-from domain.base import Base
-from domain.user.dto import UserDTO
-from domain.user.value_objects import UserAdditionalFields
-from domain.user_service.entities import UserService
+from src.domain.base import Base
+from src.domain.user.dto import UserDTO
+from src.domain.user.value_objects import UserAdditionalFields
+from src.domain.user_service.entities import UserService
 
 
 class User(Base):

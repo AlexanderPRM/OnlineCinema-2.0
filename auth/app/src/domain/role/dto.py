@@ -4,8 +4,8 @@ from datetime import datetime
 from typing import Annotated, Optional
 
 import pydantic as pd
-from domain.base import BaseDTO
-from domain.role.value_objects import AccessLevel
+from src.domain.base import BaseDTO
+from src.domain.role.value_objects import AccessLevel
 
 
 class RoleDTO(BaseDTO):

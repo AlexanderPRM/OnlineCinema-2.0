@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from domain.base import BaseDTO
+from src.domain.base import BaseDTO
 
 
 class LoginHistoryDTO(BaseDTO):

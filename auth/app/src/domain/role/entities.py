@@ -6,9 +6,9 @@ import uuid
 from datetime import UTC, datetime
 from typing import Optional
 
-from domain.base import Base
-from domain.role.dto import RoleDTO
-from domain.role.value_objects import AccessLevel
+from src.domain.base import Base
+from src.domain.role.dto import RoleDTO
+from src.domain.role.value_objects import AccessLevel
 
 
 class Role(Base):
@@ -26,11 +26,11 @@ class Role(Base):
         """
         self.id = entity.id
 
-        self._name = entity.name
-        self._description = entity.description
-        self._access_level = entity.access_level
-        self._created_at = entity.created_at
-        self._updated_at = entity.updated_at
+        self.name = entity.name
+        self.description = entity.description
+        self.access_level = entity.access_level
+        self.created_at = entity.created_at
+        self.updated_at = entity.updated_at
 
     @classmethod
     def create(

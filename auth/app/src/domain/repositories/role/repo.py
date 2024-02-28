@@ -3,8 +3,8 @@
 import uuid
 from abc import ABC, abstractmethod
 
-from domain.role.entities import Role
-from domain.role.value_objects import AccessLevel
+from src.domain.role.entities import Role
+from src.domain.role.value_objects import AccessLevel
 
 
 class IRoleRepository(ABC):
@@ -26,7 +26,7 @@ class IRoleRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve_by_id(self, role_id: uuid.UUID) -> Role | None:
+    async def retrieve_by_id(self, role_id: uuid.UUID) -> Role:
         """Retrieve role by role ID from storage.
 
         Args:
@@ -37,7 +37,7 @@ class IRoleRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve_by_name(self, name: str) -> Role | None:
+    async def retrieve_by_name(self, name: str) -> Role:
         """Retrieve role by role name from storage.
 
         Args:

@@ -5,10 +5,10 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime
 
-from domain.base import Base
-from domain.social_network.entities import SocialNetwork
-from domain.user.entities import User
-from domain.user_social_account.dto import UserSocialAccountDTO
+from src.domain.base import Base
+from src.domain.social_network.entities import SocialNetwork
+from src.domain.user.entities import User
+from src.domain.user_social_account.dto import UserSocialAccountDTO
 
 
 class UserSocialAccount(Base):

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Annotated, Optional
 
 import pydantic as pd
-from domain.base import BaseDTO
+from src.domain.base import BaseDTO
 
 
 class SocialNetworkDTO(BaseDTO):

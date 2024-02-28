@@ -3,7 +3,7 @@
 import uuid
 from abc import ABC, abstractmethod
 
-from domain.social_network.entities import SocialNetwork
+from src.domain.social_network.entities import SocialNetwork
 
 
 class ISocialNetworkRepository(ABC):
