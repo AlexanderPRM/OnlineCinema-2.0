@@ -6,12 +6,14 @@ from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import Optional, Type
 
-from domain.repositories.login_history.repo import ILoginHistoryRepository
-from domain.repositories.role.repo import IRoleRepository
-from domain.repositories.social_network.repo import ISocialNetworkRepository
-from domain.repositories.user.repo import IUserRepository
-from domain.repositories.user_service.repo import IUserServiceRepository
-from domain.repositories.user_social_account.repo import (
+from src.domain.repositories.login_history.repo import ILoginHistoryRepository
+from src.domain.repositories.role.repo import IRoleRepository
+from src.domain.repositories.social_network.repo import (
+    ISocialNetworkRepository,
+)
+from src.domain.repositories.user.repo import IUserRepository
+from src.domain.repositories.user_service.repo import IUserServiceRepository
+from src.domain.repositories.user_social_account.repo import (
     IUserSocialAccountRepository,
 )
 

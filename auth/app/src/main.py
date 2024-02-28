@@ -1,1 +1,0 @@
-"""Entrypoint module to API."""
