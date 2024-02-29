@@ -6,8 +6,8 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from domain.base import Base
-from domain.social_network.dto import SocialNetworkDTO
+from src.domain.base import Base
+from src.domain.social_network.dto import SocialNetworkDTO
 
 
 class SocialNetwork(Base):

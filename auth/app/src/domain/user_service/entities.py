@@ -5,9 +5,9 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime
 
-from domain.base import Base
-from domain.role.entities import Role
-from domain.user_service.dto import UserServiceDTO
+from src.domain.base import Base
+from src.domain.role.entities import Role
+from src.domain.user_service.dto import UserServiceDTO
 
 
 class UserService(Base):

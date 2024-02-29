@@ -3,7 +3,7 @@
 import uuid
 from abc import ABC, abstractmethod
 
-from domain.login_history.entities import LoginHistory
+from src.domain.login_history.entities import LoginHistory
 
 
 class ILoginHistoryRepository(ABC):

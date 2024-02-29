@@ -3,8 +3,8 @@
 import uuid
 from abc import ABC, abstractmethod
 
-from domain.user.entities import User
-from domain.user.value_objects import UserAdditionalFields
+from src.domain.user.entities import User
+from src.domain.user.value_objects import UserAdditionalFields
 
 
 class IUserRepository(ABC):  # noqa: WPS214

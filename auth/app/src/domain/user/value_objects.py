@@ -4,7 +4,7 @@ from datetime import date
 from typing import Annotated, Optional
 
 import pydantic as pd
-from domain.user.exceptions import ModelFieldsAreNotSpecified
+from src.domain.user.exceptions import ModelFieldsAreNotSpecified
 
 
 class UserAdditionalFields(pd.BaseModel):

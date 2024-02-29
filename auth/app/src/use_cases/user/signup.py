@@ -1,15 +1,15 @@
 """Module with User Register use case."""
 
-from domain.user.entities import User
-from domain.user_service.entities import UserService
-from use_cases.exceptions import BaseRoleNotExists, UserAlreadyExists
-from use_cases.interfaces.cache.unit_of_work import (
+from src.domain.user.entities import User
+from src.domain.user_service.entities import UserService
+from src.use_cases.exceptions import BaseRoleNotExists, UserAlreadyExists
+from src.use_cases.interfaces.cache.unit_of_work import (
     AbstractUnitOfWork as TokensUoW,
 )
-from use_cases.interfaces.database.unit_of_work import (
+from src.use_cases.interfaces.database.unit_of_work import (
     AbstractUnitOfWork as DatabaseUoW,
 )
-from use_cases.user.dto import UserSignUpDTO
+from src.use_cases.user.dto import UserSignUpDTO
 
 
 class RegisterUseCase:
@@ -29,7 +29,7 @@ class RegisterUseCase:
         self.tokens_uow = tokens_uow
         self.database_uow = database_uow
 
-    async def execute(self, dto: UserSignUpDTO):
+    async def execute(self, dto: UserSignUpDTO) -> User:
         """Register User.
 
         Args:
@@ -38,6 +38,9 @@ class RegisterUseCase:
         Raises:
             UserAlreadyExists: User Already Exists Exception.
             BaseRoleNotExists: Base Role for New users not exists.
+
+        Returns:
+            User: Created User.
         """
         already_exists = self.check_user_exists(dto.email, dto.login)
         if already_exists:
@@ -53,13 +56,15 @@ class RegisterUseCase:
             user_service = await self.database_uow.user_service.insert(
                 UserService.create(role=role),
             )
-            user = User.create(
-                email=dto.email,
-                login=dto.login,
-                password=dto.password,
-                user_service=user_service,
+            created_user = await self.database_uow.user.insert(
+                User.create(
+                    email=dto.email,
+                    login=dto.login,
+                    password=dto.password,
+                    user_service=user_service,
+                ),
             )
-            await self.database_uow.user.insert(user)
+        return created_user
 
     async def check_user_exists(self, email: str, login: str) -> bool:
         """Check if user already exists or not.

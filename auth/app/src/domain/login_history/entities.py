@@ -6,9 +6,9 @@ import uuid
 from datetime import UTC, datetime
 from typing import Optional
 
-from domain.base import Base
-from domain.login_history.dto import LoginHistoryDTO
-from domain.social_network.entities import SocialNetwork
+from src.domain.base import Base
+from src.domain.login_history.dto import LoginHistoryDTO
+from src.domain.social_network.entities import SocialNetwork
 
 
 class LoginHistory(Base):
