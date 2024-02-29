@@ -1,5 +1,5 @@
 [flake8]
-exclude = migrations/*
+exclude = auth/app/alembic/versions/*
 per-file-ignores =
   # Use Cases without parent class.
   auth/app/src/use_cases/user/*.py: WPS306
