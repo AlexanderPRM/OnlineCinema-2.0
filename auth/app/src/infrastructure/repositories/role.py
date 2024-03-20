@@ -40,9 +40,9 @@ class RoleRepository(IRoleRepository):
         """
         dumped_role = role.__dict__
         stmt = sa.insert(RoleORM).values(
-            name=dumped_role['name'],
-            description=dumped_role['description'],
-            access_level=dumped_role['access_level'],
+            name=dumped_role['_name'],
+            description=dumped_role['_description'],
+            access_level=dumped_role['_access_level'],
         ).returning(
             RoleORM.id,
             RoleORM.name,
