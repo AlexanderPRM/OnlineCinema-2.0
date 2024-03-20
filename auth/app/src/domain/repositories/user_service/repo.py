@@ -27,14 +27,14 @@ class IUserServiceRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve_by_id(self, uid: uuid.UUID) -> UserService | None:
+    async def retrieve_by_id(self, uid: uuid.UUID) -> UserService:
         """Get user service by user ID from storage.
 
         Args:
             uid (uuid.UUID): User UUID ID.
 
         Returns:
-            UserService | None: Return User Service if exists.
+            UserService: Return User Service if exists.
         """
 
     @abstractmethod

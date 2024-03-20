@@ -26,11 +26,11 @@ class Role(Base):
         """
         self.id = entity.id
 
-        self.name = entity.name
-        self.description = entity.description
-        self.access_level = entity.access_level
-        self.created_at = entity.created_at
-        self.updated_at = entity.updated_at
+        self._name = entity.name
+        self._description = entity.description
+        self._access_level = entity.access_level
+        self._created_at = entity.created_at
+        self._updated_at = entity.updated_at
 
     @classmethod
     def create(

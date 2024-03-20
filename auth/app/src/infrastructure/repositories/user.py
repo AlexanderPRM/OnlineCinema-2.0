@@ -1,0 +1,246 @@
+"""Module with User Service repository."""
+
+import uuid
+from typing import Any
+
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from sqlalchemy.sql.selectable import Select
+from src.domain.repositories.user.exceptions import UserNotFoundError
+from src.domain.repositories.user_service.repo import IUserServiceRepository
+from src.domain.role.dto import RoleDTO
+from src.domain.role.entities import Role
+from src.domain.user_service.dto import UserServiceDTO
+from src.domain.user_service.entities import UserService
+from src.infrastructure.models import Role as RoleORM
+from src.infrastructure.models import UserService as UserServiceORM
+
+
+class UserServiceRepository(IUserServiceRepository):
+    """Implement Repository with user service objects.
+
+    Args:
+        IUserServiceRepository (class): Abstract Repository Interface.
+    """
+
+    def __init__(self, session: AsyncSession) -> None:
+        """Init method.
+
+        Args:
+            session (AsyncSession): SQLAlchemy DB session.
+        """
+        self._session = session
+
+    async def insert(self, user_service: UserService) -> UserService:
+        """Add a new User Service info.
+
+        Args:
+            user_service (UserService): entity of User Service class.
+
+        Returns:
+            UserService: Entity of User Service class with created user info.
+        """
+        dumped_user_service = user_service.__dict__
+        stmt = sa.Insert(UserServiceORM).values(
+            role_id=dumped_user_service['_role_id'],
+            active=dumped_user_service['_active'],
+            verified=dumped_user_service['_verified'],
+        ).returning(
+            UserServiceORM.id,
+            UserServiceORM.role_id,
+            UserServiceORM.active,
+            UserServiceORM.verified,
+            UserServiceORM.created_at,
+            UserServiceORM.updated_at,
+        )
+        res = await self._session.execute(stmt)
+        fetch = res.one()
+        return UserService(
+            entity=UserServiceDTO(
+                id=fetch[0],
+                role_id=fetch[1],
+                active=fetch[2],
+                verified=fetch[3],
+                created_at=fetch[4],
+                updated_at=fetch[5],
+            ),
+            role=user_service.role,
+        )
+
+    async def retrieve_by_id(self, uid: uuid.UUID) -> UserService:
+        """Retrieve User Service info by user ID.
+
+        Args:
+            uid (uuid.UUID): ID of the user to update.
+
+        Raises:
+            UserNotFoundError: If the user service is not found.
+
+        Returns:
+            UserService: Retrieved user service.
+        """
+        stmt: Select[Any] = sa.Select(UserServiceORM).where(
+            UserServiceORM.id == uid,
+        ).options(selectinload(UserServiceORM.role))
+        res = await self._session.execute(stmt)
+        fetch = res.one_or_none()
+        if not fetch:
+            raise UserNotFoundError
+        record: UserServiceORM = fetch[0]
+        role: RoleORM = record.role
+        return UserService(
+            UserServiceDTO(
+                **record.__dict__,
+            ),
+            role=Role(
+                entity=RoleDTO(
+                    **role.__dict__,
+                ),
+            ),
+        )
+
+    async def update_active_status(
+        self, uid: uuid.UUID, active_status: bool,
+    ) -> UserService:
+        """Update the active status with that ID.
+
+        Args:
+            uid (uuid.UUID): ID of the user to update.
+            active_status (bool): The new active status.
+
+        Raises:
+            UserNotFoundError: If the user service is not found.
+
+        Returns:
+            UserService: Updated user service.
+        """
+        stmt = sa.Update(UserServiceORM).where(
+            UserServiceORM.id == uid,
+        ).values(
+            active=active_status,
+        ).returning(
+            UserServiceORM.id,
+            UserServiceORM.role_id,
+            UserServiceORM.active,
+            UserServiceORM.verified,
+            UserServiceORM.created_at,
+            UserServiceORM.updated_at,
+        )
+        user_res = await self._session.execute(stmt)
+        user_fetch = user_res.one_or_none()
+        if not user_fetch:
+            raise UserNotFoundError
+        stmt: Select[Any] = sa.Select(RoleORM).where(
+            RoleORM.id == user_fetch[1],
+        )
+        role_res = await self._session.execute(stmt)
+        role_record: RoleORM = role_res.one()[0]
+        return UserService(
+            UserServiceDTO(
+                id=user_fetch[0],
+                role_id=user_fetch[1],
+                active=user_fetch[2],
+                verified=user_fetch[3],
+                created_at=user_fetch[4],
+                updated_at=user_fetch[5],
+            ),
+            role=Role(
+                entity=RoleDTO(
+                    **role_record.__dict__,
+                ),
+            ),
+        )
+
+    async def update_verification_status(
+        self, uid: uuid.UUID, verified_status: bool,
+    ) -> UserService:
+        """Update the verification status of a user service.
+
+        Args:
+            uid (uuid.UUID): ID of the user to update.
+            verified_status (bool): The new verification status.
+
+        Raises:
+            UserNotFoundError: If the user service is not found.
+
+        Returns:
+            UserService: Updated user service.
+        """
+        stmt = sa.Update(UserServiceORM).where(
+            UserServiceORM.id == uid,
+        ).values(
+            verified_status=verified_status,
+        ).returning(
+            UserServiceORM.id,
+            UserServiceORM.role_id,
+            UserServiceORM.active,
+            UserServiceORM.verified,
+            UserServiceORM.created_at,
+            UserServiceORM.updated_at,
+        )
+        user_res = await self._session.execute(stmt)
+        user_fetch = user_res.one_or_none()
+        if not user_fetch:
+            raise UserNotFoundError
+        stmt: Select[Any] = sa.Select(RoleORM).where(
+            RoleORM.id == user_fetch[1],
+        )
+        role_res = await self._session.execute(stmt)
+        role_fetch: RoleORM = role_res.one()[0]
+        return UserService(
+            UserServiceDTO(
+                id=user_fetch[0],
+                role_id=user_fetch[1],
+                active=user_fetch[2],
+                verified=user_fetch[3],
+                created_at=user_fetch[4],
+                updated_at=user_fetch[5],
+            ),
+            role=Role(
+                entity=RoleDTO(
+                    **role_fetch.__dict__,
+                ),
+            ),
+        )
+
+    async def update_role(self, uid: uuid.UUID, role: Role) -> UserService:
+        """Update the role of a user service.
+
+        Args:
+            uid (uuid.UUID): ID of the user to update.
+            role (Role): New role for update.
+
+        Raises:
+            UserNotFoundError: if the user not found.
+
+        Returns:
+            UserService: Updated user service.
+        """
+        stmt = sa.Update(UserServiceORM).where(
+            UserServiceORM.id == uid,
+        ).values(
+            role_id=role.id,
+        ).returning(
+            UserServiceORM.id,
+            UserServiceORM.role_id,
+            UserServiceORM.active,
+            UserServiceORM.verified,
+            UserServiceORM.created_at,
+            UserServiceORM.updated_at,
+        )
+        res = await self._session.execute(stmt)
+        fetch = res.one_or_none()
+        if not fetch:
+            raise UserNotFoundError
+        return UserService(
+            UserServiceDTO(
+                id=fetch[0],
+                role_id=fetch[1],
+                active=fetch[2],
+                verified=fetch[3],
+                created_at=fetch[4],
+                updated_at=fetch[5],
+            ),
+            role=role,
+        )
