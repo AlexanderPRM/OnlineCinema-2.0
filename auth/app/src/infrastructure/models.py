@@ -55,7 +55,10 @@ class UserService(IDMixin, TimestampMixin, Base):
     active: Mapped[bool] = mapped_column(default=True)
     verified: Mapped[bool] = mapped_column(default=False)
 
-    role: Mapped['Role'] = relationship(back_populates='user_services')
+    role: Mapped['Role'] = relationship(
+        back_populates='user_services',
+        lazy='selectin',
+    )
     user: Mapped['User'] = relationship(back_populates='user_service')
 
 
