@@ -26,36 +26,36 @@ class IUserRepository(ABC):  # noqa: WPS214
         """
 
     @abstractmethod
-    async def retrieve_by_id(self, uid: uuid.UUID) -> User | None:
+    async def retrieve_by_id(self, uid: uuid.UUID) -> User:
         """Get user by user ID from storage.
 
         Args:
             uid (uuid.UUID): User UUID ID.
 
         Returns:
-            User | None: Return User if exists.
+            User: Retrieved User.
         """
 
     @abstractmethod
-    async def retrieve_by_email(self, email: str) -> User | None:
+    async def retrieve_by_email(self, email: str) -> User:
         """Retrieve user by email from storage.
 
         Args:
             email (str): User electronic mail address.
 
         Returns:
-            User | None: Return User if exists.
+            User: Retrieved User.
         """
 
     @abstractmethod
-    async def retrieve_by_login(self, login: str) -> User | None:
+    async def retrieve_by_login(self, login: str) -> User:
         """Retrieve user by login from storage.
 
         Args:
             login (str): User login.
 
         Returns:
-            User | None: Return User if exists.
+            User: Retrieved User.
         """
 
     @abstractmethod
@@ -63,7 +63,7 @@ class IUserRepository(ABC):  # noqa: WPS214
         self,
         email: str,
         login: str,
-    ) -> User | None:
+    ) -> User:
         """Retrieve user by login or email from storage.
 
         Args:
@@ -71,7 +71,7 @@ class IUserRepository(ABC):  # noqa: WPS214
             login (str): User login.
 
         Returns:
-            User | None: Return User if exists.
+            User: Retrieved User.
         """
 
     @abstractmethod
