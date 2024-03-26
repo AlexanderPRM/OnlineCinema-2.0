@@ -80,7 +80,7 @@ class UserServiceRepository(IUserServiceRepository):
         stmt: Select[Any] = sa.Select(UserServiceORM).where(
             UserServiceORM.id == uid,
         )
-        return await self._retrieve_data(stmt)
+        return await self._retrieve_one(stmt)
 
     async def update_active_status(
         self, uid: uuid.UUID, active_status: bool,
@@ -111,7 +111,7 @@ class UserServiceRepository(IUserServiceRepository):
         select_stmt: Select[Any] = sa.Select(UserServiceORM).where(
             UserServiceORM.id == fetch[0],
         )
-        return await self._retrieve_data(select_stmt)
+        return await self._retrieve_one(select_stmt)
 
     async def update_verification_status(
         self, uid: uuid.UUID, verified_status: bool,
@@ -131,7 +131,7 @@ class UserServiceRepository(IUserServiceRepository):
         stmt = sa.Update(UserServiceORM).where(
             UserServiceORM.id == uid,
         ).values(
-            verified_status=verified_status,
+            verified=verified_status,
         ).returning(
             UserServiceORM.id,
         )
@@ -142,7 +142,7 @@ class UserServiceRepository(IUserServiceRepository):
         select_stmt: Select[Any] = sa.Select(UserServiceORM).where(
             UserServiceORM.id == fetch[0],
         )
-        return await self._retrieve_data(select_stmt)
+        return await self._retrieve_one(select_stmt)
 
     async def update_role(self, uid: uuid.UUID, role: Role) -> UserService:
         """Update the role of a user service.
@@ -185,7 +185,7 @@ class UserServiceRepository(IUserServiceRepository):
             role=role,
         )
 
-    async def _retrieve_data(self, stmt: Select[Any]) -> UserService:
+    async def _retrieve_one(self, stmt: Select[Any]) -> UserService:
         """Retrieve User Service by some statement.
 
         Args:

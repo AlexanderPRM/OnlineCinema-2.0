@@ -5,6 +5,7 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Optional
 
 from src.domain.base import Base
 from src.domain.social_network.dto import SocialNetworkDTO
@@ -31,7 +32,9 @@ class SocialNetwork(Base):
         self._updated_at = entity.updated_at
 
     @classmethod
-    def create(cls, picture_file_path: Path, name: str) -> SocialNetwork:
+    def create(
+        cls, name: str, picture_file_path: Optional[Path] = None,
+    ) -> SocialNetwork:
         """Create Social Network class which represent a social network.
 
         Args:

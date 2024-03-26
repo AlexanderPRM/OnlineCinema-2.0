@@ -1,6 +1,7 @@
 """Module with User Repository."""
 
 import uuid
+from pathlib import Path
 from typing import Any
 
 import sqlalchemy as sa
@@ -127,21 +128,6 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(stmt)
 
-    async def retrieve_by_email_or_login(self, email: str, login: str) -> User:
-        """Retrieve User by email or login.
-
-        Args:
-            email (str): Electronic mail.
-            login (str): Unique user login.
-
-        Returns:
-            User: Retrieved User.
-        """
-        stmt: Select[Any] = sa.Select(UserORM).where(
-            UserORM.email == email or UserORM.login == login,
-        )
-        return await self._retrieve_data(stmt)
-
     async def change_email(self, uid: uuid.UUID, email: str) -> User:
         """Change the email of user with that ID.
 
@@ -248,9 +234,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         fields = {}
         additional_fields_dump = user_additional_fields.model_dump()
         for field, new_value in additional_fields_dump.items():
-            if new_value:
-                fields[field] = str(new_value)
+            if not new_value:
+                continue
 
+            if isinstance(new_value, Path):
+                new_value = new_value.as_posix()
+            fields[field] = new_value
         stmt = sa.Update(UserORM).where(
             UserORM.id == uid,
         ).values(

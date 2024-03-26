@@ -43,8 +43,8 @@ class SocialNetworkRepository(ISocialNetworkRepository):
         """
         dumped_social_network = entity.__dict__
         picture_file_path = dumped_social_network['_picture']
-        if picture_file_path:
-            picture_file_path = str(picture_file_path)
+        if isinstance(picture_file_path, Path):
+            picture_file_path = picture_file_path.as_posix()
 
         stmt = sa.Insert(SocialNetworkORM).values(
             picture=picture_file_path,

@@ -11,3 +11,4 @@ per-file-ignores =
   auth/app/src/infrastructure/models.py: WPS226
 max-imports = 20
 max-local-variables=8
+max-methods=10
