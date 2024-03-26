@@ -87,8 +87,10 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
             social_network_id (uuid.UUID): Social Network UUID.
         """
         stmt = sa.Delete(UserSocialAccountORM).where(
-            UserSocialAccountORM.user_id == uid
-            and UserSocialAccountORM.social_network_id == social_network_id,
+            sa.and_(
+                UserSocialAccountORM.user_id == uid,
+                UserSocialAccountORM.social_network_id == social_network_id,
+            ),
         )
         await self._session.execute(stmt)
 
