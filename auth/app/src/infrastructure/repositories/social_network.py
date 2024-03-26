@@ -39,7 +39,7 @@ class SocialNetworkRepository(ISocialNetworkRepository):
 
         Returns:
             SocialNetwork:
-            Entity of SocialNetwEntity of SocialNetwork class with new info.
+            Entity of SocialNetwork class with new info.
         """
         dumped_social_network = entity.__dict__
         picture_file_path = dumped_social_network['_picture']
@@ -51,8 +51,6 @@ class SocialNetworkRepository(ISocialNetworkRepository):
             name=dumped_social_network['_name'],
         ).returning(
             SocialNetworkORM.id,
-            SocialNetworkORM.picture,
-            SocialNetworkORM.name,
             SocialNetworkORM.created_at,
             SocialNetworkORM.updated_at,
         )
@@ -61,10 +59,10 @@ class SocialNetworkRepository(ISocialNetworkRepository):
         return SocialNetwork(
             SocialNetworkDTO(
                 id=fetch[0],
-                picture=fetch[1],
-                name=fetch[2],
-                created_at=fetch[3],
-                updated_at=fetch[4],
+                picture=dumped_social_network['_picture'],
+                name=dumped_social_network['_name'],
+                created_at=fetch[1],
+                updated_at=fetch[2],
             ),
         )
 
