@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import UTC, datetime
+from typing import Optional
 
 from src.domain.base import Base
 from src.domain.social_network.entities import SocialNetwork
@@ -21,8 +22,8 @@ class UserSocialAccount(Base):
     def __init__(
         self,
         entity: UserSocialAccountDTO,
-        user: User,
-        social_network: SocialNetwork,
+        user: Optional[User] = None,
+        social_network: Optional[SocialNetwork] = None,
     ) -> None:
         """Init method.
 

@@ -26,6 +26,32 @@ class IUserSocialAccountRepository(ABC):
         """
 
     @abstractmethod
+    async def delete_by_id(
+        self,
+        user_social_account_id: uuid.UUID,
+    ) -> None:
+        """Delete user social account.
+
+        Args:
+            user_social_account_id (uuid.UUID): UUID of user social account.
+        """
+
+    @abstractmethod
+    async def delete_by_user_and_social_network(
+        self,
+        user_id: uuid.UUID,
+        social_network: uuid.UUID,
+    ) -> None:
+        """Delete user social account.
+
+        By user ID and social network ID.
+
+        Args:
+            user_id (uuid.UUID): User UUID.
+            social_network (uuid.UUID): Social Network UUID.
+        """
+
+    @abstractmethod
     async def retrieve_by_id(
         self, user_social_account_id: uuid.UUID,
     ) -> UserSocialAccount:

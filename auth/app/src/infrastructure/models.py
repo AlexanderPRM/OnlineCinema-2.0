@@ -108,7 +108,7 @@ class SocialNetwork(IDMixin, TimestampMixin, Base):
     __tablename__ = 'social_network'
 
     picture: Mapped[str] = mapped_column(sa.Text, nullable=True)
-    name: Mapped[str] = mapped_column(sa.String(24))
+    name: Mapped[str] = mapped_column(sa.String(24), unique=True)
 
     login_history: Mapped[list['LoginHistory']] = relationship(
         back_populates='social_network',
