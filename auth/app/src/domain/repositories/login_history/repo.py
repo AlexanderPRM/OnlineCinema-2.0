@@ -29,7 +29,7 @@ class ILoginHistoryRepository(ABC):
     async def retrieve_by_id(
         self,
         login_entry_id: uuid.UUID,
-    ) -> LoginHistory | None:
+    ) -> LoginHistory:
         """Retrieve login entry by id.
 
         Args:

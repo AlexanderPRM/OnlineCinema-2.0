@@ -31,6 +31,7 @@ class LoginHistory(Base):
         """
         self.id = entity.id
 
+        self._user_id = entity.user_id
         self._user_agent = entity.user_agent
         self._social_network_id = entity.social_network_id
         self._created_at = entity.created_at
