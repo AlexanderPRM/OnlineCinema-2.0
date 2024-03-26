@@ -2,6 +2,7 @@
 
 import uuid
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 from src.domain.social_network.entities import SocialNetwork
 
@@ -28,7 +29,7 @@ class ISocialNetworkRepository(ABC):
     @abstractmethod
     async def retrieve_by_id(
         self, social_network_id: uuid.UUID,
-    ) -> SocialNetwork | None:
+    ) -> SocialNetwork:
         """Retrieve social network by id.
 
         Args:
@@ -39,7 +40,7 @@ class ISocialNetworkRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve_by_name(self, name: str) -> SocialNetwork | None:
+    async def retrieve_by_name(self, name: str) -> SocialNetwork:
         """Retrieve social network by name.
 
         Args:
@@ -51,13 +52,13 @@ class ISocialNetworkRepository(ABC):
 
     @abstractmethod
     async def change_picture(
-        self, social_network_id: uuid.UUID, picture_file_path: str,
+        self, social_network_id: uuid.UUID, picture_file_path: Path,
     ) -> SocialNetwork:
         """Change a picture of social network to new one.
 
         Args:
             social_network_id (uuid.UUID): Social Network UUID ID.
-            picture_file_path (str):
+            picture_file_path (Path):
             File path to new picture of social network.
 
         Returns:

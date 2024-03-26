@@ -25,7 +25,7 @@ class RoleRepository(IRoleRepository):
         """Init method.
 
         Args:
-            session (AsyncSession): SQLAlchemy DB Session.
+            session (AsyncSession): SQLAlchemy session to Database.
         """
         self._session = session
 
