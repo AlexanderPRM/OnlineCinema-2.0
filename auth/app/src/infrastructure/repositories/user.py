@@ -27,7 +27,7 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         """Init method.
 
         Args:
-            session (AsyncSession): SQLAlchemy DB session.
+            session (AsyncSession): SQLAlchemy session to Database.
         """
         self._session = session
 

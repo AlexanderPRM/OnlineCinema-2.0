@@ -28,7 +28,7 @@ class UserServiceRepository(IUserServiceRepository):
         """Init method.
 
         Args:
-            session (AsyncSession): SQLAlchemy DB session.
+            session (AsyncSession): SQLAlchemy session to Database.
         """
         self._session = session
 
