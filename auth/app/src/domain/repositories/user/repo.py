@@ -59,6 +59,18 @@ class IUserRepository(ABC):  # noqa: WPS214
         """
 
     @abstractmethod
+    async def retrieve_by_email_or_login(self, email: str, login: str) -> User:
+        """Retrieve user by login or email.
+
+        Args:
+            email (str): Electronic mail.
+            login (str): Unique login.
+
+        Returns:
+            User: Retrieved user.
+        """
+
+    @abstractmethod
     async def change_email(
         self, uid: uuid.UUID, email: str,
     ) -> User:
