@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import uuid
 from datetime import UTC, datetime
 
 from src.domain.base import Base
@@ -65,7 +64,7 @@ class User(Base):
         """
         return cls(
             entity=UserDTO(
-                id=uuid.uuid4(),
+                id=user_service.id,
                 email=email,
                 login=login,
                 password=password,

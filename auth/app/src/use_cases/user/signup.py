@@ -1,8 +1,12 @@
 """Module with User Register use case."""
 
+from src.domain.repositories.user.exceptions import (
+    UserAlreadyExists,
+    UserNotFoundError,
+)
 from src.domain.user.entities import User
 from src.domain.user_service.entities import UserService
-from src.use_cases.exceptions import BaseRoleNotExists, UserAlreadyExists
+from src.use_cases.exceptions import BaseRoleNotExists
 from src.use_cases.interfaces.cache.unit_of_work import (
     AbstractUnitOfWork as TokensUoW,
 )
@@ -42,8 +46,8 @@ class RegisterUseCase:
         Returns:
             User: Created User.
         """
-        already_exists = self.check_user_exists(dto.email, dto.login)
-        if already_exists:
+        exists = self.check_user_exists(dto.email, dto.login)
+        if exists:
             raise UserAlreadyExists
 
         async with self.database_uow(autocommit=True):
@@ -77,8 +81,11 @@ class RegisterUseCase:
             bool: Exists or Not.
         """
         async with self.database_uow(autocommit=True):
-            user = await self.database_uow.user.retrieve_by_email_or_login(
-                email,
-                login,
-            )
-        return user is not None
+            try:
+                await self.database_uow.user.retrieve_by_email_or_login(
+                    email,
+                    login,
+                )
+            except UserNotFoundError:
+                return True
+        return False
