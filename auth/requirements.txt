@@ -1,8 +1,10 @@
 SQLAlchemy[asyncio]==2.0.25
 asyncpg==0.29.0
+psycopg2==2.9.9
 alembic==1.13.1
 python-dotenv==1.0.0
 pydantic[email]==2.6.0
 fastapi==0.109.0
-bcrypt==4.1.2
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
 backoff==2.2.1

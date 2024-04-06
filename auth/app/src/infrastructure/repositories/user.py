@@ -43,6 +43,7 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         """
         dumped_user = user.__dict__
         stmt = sa.Insert(UserORM).values(
+            id=dumped_user['id'],
             email=dumped_user['_email'],
             login=dumped_user['_login'],
             password=dumped_user['_password'],
@@ -139,7 +140,7 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
             User: Retrieved user.
         """
         stmt: Select[Any] = sa.Select(UserORM).where(
-            sa.or_(UserORM.email == email, UserORM.login == login)
+            sa.or_(UserORM.email == email, UserORM.login == login),
         )
         return await self._retrieve_data(stmt)
 

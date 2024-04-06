@@ -4,9 +4,13 @@ import uuid
 from typing import Any
 
 import sqlalchemy as sa
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
-from src.domain.repositories.role.exceptions import RoleNotFoundError
+from src.domain.repositories.role.exceptions import (
+    RoleAlreadyExists,
+    RoleNotFoundError,
+)
 from src.domain.repositories.role.repo import IRoleRepository
 from src.domain.role.dto import RoleDTO
 from src.domain.role.entities import Role
@@ -35,6 +39,9 @@ class RoleRepository(IRoleRepository):
         Args:
             role (Role): entity of Role class.
 
+        Raises:
+            RoleAlreadyExists: If role with that name already exists.
+
         Returns:
             Role (class): New Role class with new created role object info.
         """
@@ -51,7 +58,12 @@ class RoleRepository(IRoleRepository):
             RoleORM.created_at,
             RoleORM.updated_at,
         )
-        res = await self._session.execute(stmt)
+
+        try:
+            res = await self._session.execute(stmt)
+        except IntegrityError as exc:
+            raise RoleAlreadyExists from exc
+
         fetch = res.one()
         return Role(
             RoleDTO(
