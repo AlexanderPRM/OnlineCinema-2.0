@@ -19,7 +19,7 @@ from src.use_cases.interfaces.database.unit_of_work import AbstractUnitOfWork
 
 
 class UnitOfWork(AbstractUnitOfWork):
-    """Class for work with repositories.
+    """Class for work with domain entites repositories.
 
     Args:
         AbstractUnitOfWork (class): Abstract Unit of Work class.

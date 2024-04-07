@@ -2,7 +2,7 @@
 
 import uuid
 from abc import ABC, abstractmethod
-from typing import Optional, TypeAlias
+from typing import TypeAlias
 
 JWTToken: TypeAlias = str
 
@@ -20,7 +20,7 @@ class IAccessTokenRepository(ABC):
         user_id: uuid.UUID,
         access_token: JWTToken,
         exp: int,
-    ) -> JWTToken:
+    ) -> None:
         """Insert access token in storage.
 
         Args:
@@ -33,16 +33,14 @@ class IAccessTokenRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve(
+    async def exists(
         self,
         user_id: uuid.UUID,
-        access_token: JWTToken,
-    ) -> Optional[JWTToken]:
+    ) -> None:
         """Retrieve access token from storage.
 
         Args:
             user_id (uuid.UUID): User UUID ID.
-            access_token (JWTToken): JWT access token.
 
         Returns:
             Optional[JWTToken]: Json Web Token.
@@ -59,14 +57,14 @@ class IRefreshTokenRepository(ABC):
     @abstractmethod
     async def insert(
         self,
-        user_id: uuid.UUID,
+        uid: uuid.UUID,
         refresh_token: JWTToken,
         exp: int,
-    ) -> JWTToken:
+    ) -> None:
         """Insert refresh token in storage.
 
         Args:
-            user_id (uuid.UUID): User UUID ID.
+            uid (uuid.UUID): User UUID ID.
             refresh_token (JWTToken): JWT refresh token.
             exp (int): When Token expire.
 
@@ -75,30 +73,27 @@ class IRefreshTokenRepository(ABC):
         """
 
     @abstractmethod
-    async def retrieve(
+    async def exists(
         self,
-        user_id: uuid.UUID,
+        uid: uuid.UUID,
         refresh_token: JWTToken,
-    ) -> Optional[JWTToken]:
-        """Retrieve refresh token from storage.
+    ) -> None:
+        """Check exists that Refresh Token in storage.
 
         Args:
-            user_id (uuid.UUID): User UUID ID.
-            refresh_token (JWTToken): JWT refresh token.
-
-        Returns:
-            Optional[JWTToken]: Json Web Token.
+            uid (uuid.UUID): User UUID ID.
+            refresh_token (JWTToken): Refresh Json Web Token.
         """
 
     @abstractmethod
     async def delete(
         self,
-        user_id: uuid.UUID,
+        uid: uuid.UUID,
         refresh_token: JWTToken,
     ) -> None:
         """Delete refresh token from Storage.
 
         Args:
-            user_id (uuid.UUID): User UUID ID.
-            refresh_token (JWTToken): JWT refresh token.
+            uid (uuid.UUID): User UUID ID.
+            refresh_token (JWTToken): Refresh Json Web Token.
         """

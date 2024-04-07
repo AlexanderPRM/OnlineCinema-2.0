@@ -21,8 +21,8 @@ class AbstractUnitOfWork(ABC):
         ABC (class): Used to create an abstract class.
     """
 
-    access_token: IAccessTokenRepository
-    refresh_token: IRefreshTokenRepository
+    access_tokens: IAccessTokenRepository
+    refresh_tokens: IRefreshTokenRepository
 
     def __call__(self, transaction: bool) -> AbstractUnitOfWork:
         """Magic method responsible for the logic when calling class.
