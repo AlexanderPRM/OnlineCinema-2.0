@@ -39,5 +39,24 @@ class DatabaseSettings(BaseSettings):
     db_schema: str
 
 
+class TokensSettings(BaseSettings):
+    """Tokens Configuration.
+
+    Args:
+        BaseSettings (class): Base Pydantic class for Settings.
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=('.env', '.env.prod'),
+        extra='ignore',
+    )
+
+    jwt_secret: str
+    encryption_algorithm: str
+    access_token_expiration: int
+    refresh_token_expiration: int
+
+
 user_config = UserSettings()
 database_config = DatabaseSettings()
+tokens_settings = TokensSettings()

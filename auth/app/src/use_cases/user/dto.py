@@ -6,15 +6,16 @@ from typing import Annotated
 
 import pydantic as pd
 from passlib.context import CryptContext
+from src.domain.user.dto import UserDTO
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 class UserSignUpDTO(pd.BaseModel):
-    """User sign up DTO.
+    """User sign up data transfer object.
 
     Args:
-        BaseModel (class): Base Pydantic model for.
+        BaseModel (class): Base Pydantic class for models.
     """
 
     email: pd.EmailStr
@@ -34,3 +35,15 @@ class UserSignUpDTO(pd.BaseModel):
         """
         self.password = pwd_context.hash(self.password)
         return self
+
+
+class UserSignUpOutDTO(pd.BaseModel):
+    """User sign up output data transfer object.
+
+    Args:
+        BaseModel (class): Base Pydantic class for models.
+    """
+
+    created_user: UserDTO
+    access_token: str
+    refresh_token: str

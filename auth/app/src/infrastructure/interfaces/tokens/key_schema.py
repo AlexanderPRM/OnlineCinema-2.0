@@ -3,7 +3,7 @@
 import uuid
 from typing import Optional
 
-from src.use_cases.interfaces.cache.tokens.repo import JWTToken
+from src.use_cases.interfaces.tokens.entities import IToken
 
 DEFAULT_KEY_PREFIX = 'auth:jwt-tokens'
 
@@ -37,27 +37,31 @@ class KeySchema:  # noqa: WPS306 (Without Base class.)
         self.prefix = prefix
 
     @prefixed_key
-    def user_access_token(self, uid: uuid.UUID, access_token: JWTToken):
+    def user_access_token(self, uid: uuid.UUID, access_token: IToken):
         """Get key for user access token.
 
         Args:
             uid (uuid.UUID): User UUID.
-            access_token (JWTToken): Access Json Web Token.
+            access_token (IToken): Access Json Web Token.
 
         Returns:
             str: Result key.
         """
-        return '{0}:{1}:{2}'.format('access-token', str(uid), access_token)
+        return '{0}:{1}:{2}'.format(
+            'access-token', str(uid), access_token.get_encoded_token(),
+        )
 
     @prefixed_key
-    def user_refresh_token(self, uid: uuid.UUID, refresh_token: JWTToken):
+    def user_refresh_token(self, uid: uuid.UUID, refresh_token: IToken):
         """Get key for user refresh token.
 
         Args:
             uid (uuid.UUID): User UUID.
-            refresh_token (JWTToken): Refresh Json Web Token.
+            refresh_token (IToken): Refresh Json Web Token.
 
         Returns:
             str: Result key.
         """
-        return '{0}:{1}:{2}'.format('refresh-token', str(uid), refresh_token)
+        return '{0}:{1}:{2}'.format(
+            'refresh-token', str(uid), refresh_token.get_encoded_token(),
+        )
