@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from redis.asyncio import Redis
-from src.infrastructure.interfaces.cache.tokens.key_schema import KeySchema
-from src.infrastructure.interfaces.cache.tokens.repo import (
+from src.infrastructure.interfaces.tokens.key_schema import KeySchema
+from src.infrastructure.interfaces.tokens.repo import (
     AccessTokenRepository,
     RefreshTokenRepository,
 )

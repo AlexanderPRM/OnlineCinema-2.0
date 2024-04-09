@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import Optional, Type
 
-from src.use_cases.interfaces.cache.tokens.repo import (
+from src.use_cases.interfaces.tokens.repo import (
     IAccessTokenRepository,
     IRefreshTokenRepository,
 )

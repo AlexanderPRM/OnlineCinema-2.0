@@ -4,7 +4,7 @@ per-file-ignores =
   # Use Cases without parent class.
   auth/app/src/use_cases/user/*.py: WPS306
   # Database without parent class.
-  auth/app/src/infrastructure/database.py: WPS306
+  auth/app/src/infrastructure/databases.py: WPS306
   # For mixins like IDMixin or TimestampMixin.
   auth/app/src/infrastructure/mixins.py: WPS306
   # ORM models literals.

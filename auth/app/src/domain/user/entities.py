@@ -117,3 +117,24 @@ class User(Base):
         for field in fields_set:
             class_field = '_{0}'.format(field)
             self.__dict__[class_field] = fields_in_dict[field]
+
+    def as_dto(self) -> UserDTO:
+        """Get user info as DTO.
+
+        Returns:
+            UserDTO: Instance of User data transfer object.
+        """
+        return UserDTO(
+            id=self.id,
+            email=self._email,
+            login=self._login,
+            password=self._password,
+            user_service_id=self._user_service_id,
+            full_name=self._full_name,
+            profile_picture=self._profile_picture,
+            birthday=self._birthday,
+            phone_number=self._phone_number,
+            bio=self._bio,
+            created_at=self._created_at,
+            updated_at=self._updated_at,
+        )
