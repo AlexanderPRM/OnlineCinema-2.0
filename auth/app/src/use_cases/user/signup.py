@@ -56,7 +56,7 @@ class RegisterUseCase:
             raise UserAlreadyExists
 
         async with self.database_uow(autocommit=True):
-            role = await self.database_uow.role.retrieve_by_name('base')
+            role = await self.database_uow.role.retrieve_base_role()
 
         if not role:
             raise BaseRoleNotExists

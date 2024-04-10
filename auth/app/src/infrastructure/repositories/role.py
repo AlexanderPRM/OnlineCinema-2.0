@@ -4,6 +4,7 @@ import uuid
 from typing import Any
 
 import sqlalchemy as sa
+from config import UserSettings
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
@@ -25,13 +26,19 @@ class RoleRepository(IRoleRepository):
         IRoleRepository (class): Abstract Role Repository.
     """
 
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(
+        self,
+        session: AsyncSession,
+        user_config: UserSettings,
+    ) -> None:
         """Init method.
 
         Args:
             session (AsyncSession): SQLAlchemy session to Database.
+            user_config (UserSettings): Settings for User.
         """
         self._session = session
+        self._user_config = user_config
 
     async def insert(self, role: Role) -> Role:
         """Add a new role.
@@ -114,6 +121,27 @@ class RoleRepository(IRoleRepository):
         """
         stmt: Select[Any] = sa.Select(RoleORM).where(
             RoleORM.name == name,
+        )
+        res = await self._session.execute(stmt)
+        fetch = res.one_or_none()
+        if not fetch:
+            raise RoleNotFoundError
+        record: RoleORM = fetch[0]
+        return Role(
+            RoleDTO(**record.__dict__),
+        )
+
+    async def retrieve_base_role(self) -> Role:
+        """Retrieve base role by name from storage.
+
+        Raises:
+            RoleNotFoundError: If role not found, throw this error.
+
+        Returns:
+            Role: Entity of Role.
+        """
+        stmt: Select[Any] = sa.Select(RoleORM).where(
+            RoleORM.name == self._user_config.default_user_role,
         )
         res = await self._session.execute(stmt)
         fetch = res.one_or_none()

@@ -33,7 +33,7 @@ class IRoleRepository(ABC):
             role_id (uuid.UUID): Role UUID ID.
 
         Returns:
-            Role | None: Return Role if exists.
+            Role: Return Role if exists.
         """
 
     @abstractmethod
@@ -44,7 +44,18 @@ class IRoleRepository(ABC):
             name (str): Role name.
 
         Returns:
-            Role | None: Return Role if exists.
+            Role: Return Role if exists.
+        """
+
+    @abstractmethod
+    async def retrieve_base_role(self) -> Role:
+        """Retrieve base role by name from storage.
+
+        Raises:
+            RoleNotFoundError: If role not found, throw this error.
+
+        Returns:
+            Role: Entity of Role.
         """
 
     @abstractmethod
