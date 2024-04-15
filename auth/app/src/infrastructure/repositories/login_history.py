@@ -3,6 +3,7 @@
 import uuid
 from typing import Any, Optional
 
+import backoff
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -31,6 +32,12 @@ class LoginHistoryRepository(ILoginHistoryRepository):
         """
         self._session = session
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def insert(self, entity: LoginHistory) -> LoginHistory:
         """Add a new login entry.
 
@@ -64,6 +71,12 @@ class LoginHistoryRepository(ILoginHistoryRepository):
             social_network=entity.social_network,
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_id(self, login_entry_id: uuid.UUID) -> LoginHistory:
         """Retrieve login entry by ID.
 
@@ -101,6 +114,12 @@ class LoginHistoryRepository(ILoginHistoryRepository):
             social_network=social_network_entity,
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_user_id(self, uid: uuid.UUID) -> list[LoginHistory]:
         """Retrieve all login entries by user id.
 
