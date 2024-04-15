@@ -7,3 +7,7 @@ class RoleNotFoundError(Exception):
 
 class RoleAlreadyExists(Exception):
     """Role with this fields already exists."""
+
+
+class BaseRoleNotExists(Exception):
+    """Base role for not exists."""
