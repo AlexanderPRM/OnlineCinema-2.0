@@ -89,7 +89,7 @@ async def init_redis(
     connection_pool = ConnectionPool(
         host=config.redis_host,
         port=config.redis_port,
-        user=config.redis_user,
+        username=config.redis_user,
         password=config.redis_password,
         max_connections=config.max_connections,
     )

@@ -9,7 +9,8 @@ from sqlalchemy.exc import IntegrityError, TimeoutError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
 from src.domain.repositories.role.exceptions import (
-    RoleAlreadyExists,
+    BaseRoleNotFoundError,
+    RoleAlreadyExistsError,
     RoleNotFoundError,
 )
 from src.domain.repositories.role.repo import IRoleRepository
@@ -50,7 +51,7 @@ class RoleRepository(IRoleRepository):
             role (Role): entity of Role class.
 
         Raises:
-            RoleAlreadyExists: If role with that name already exists.
+            RoleAlreadyExistsError: If role with that name already exists.
 
         Returns:
             Role (class): New Role class with new created role object info.
@@ -72,7 +73,7 @@ class RoleRepository(IRoleRepository):
         try:
             res = await self._session.execute(stmt)
         except IntegrityError as exc:
-            raise RoleAlreadyExists from exc
+            raise RoleAlreadyExistsError from exc
 
         fetch = res.one()
         return Role(
@@ -156,7 +157,7 @@ class RoleRepository(IRoleRepository):
         """Retrieve base role by name from storage.
 
         Raises:
-            RoleNotFoundError: If role not found, throw this error.
+            BaseRoleNotFoundError: If role not found, throw this error.
 
         Returns:
             Role: Entity of Role.
@@ -167,7 +168,7 @@ class RoleRepository(IRoleRepository):
         res = await self._session.execute(stmt)
         fetch = res.one_or_none()
         if not fetch:
-            raise RoleNotFoundError
+            raise BaseRoleNotFoundError
         record: RoleORM = fetch[0]
         return Role(
             RoleDTO(**record.__dict__),

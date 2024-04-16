@@ -1,6 +1,5 @@
 """Module with User Register use case."""
 
-from src.domain.repositories.role.exceptions import BaseRoleNotExists
 from src.domain.repositories.user.exceptions import (
     UserAlreadyExists,
     UserNotFoundError,
@@ -46,7 +45,6 @@ class SignUpUseCase:
 
         Raises:
             UserAlreadyExists: User Already Exists Exception.
-            BaseRoleNotExists: Base Role for New users not exists.
 
         Returns:
             UserSignUpOutDTO: Output use case info.
@@ -57,9 +55,6 @@ class SignUpUseCase:
 
         async with self.database_uow(autocommit=True):
             role = await self.database_uow.role.retrieve_base_role()
-
-        if not role:
-            raise BaseRoleNotExists
 
         created_user = await self._insert_user(
             role, dto.email, dto.login, dto.password,
@@ -88,7 +83,7 @@ class SignUpUseCase:
         Returns:
             bool: Exists or Not.
         """
-        async with self.database_uow(autocommit=True):
+        async with self.database_uow(autocommit=False):
             try:
                 await self.database_uow.user.retrieve_by_email_or_login(
                     email,
