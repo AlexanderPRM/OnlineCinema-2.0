@@ -4,13 +4,14 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from config import database_config
+from config import PostgreSQLSettings
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from src.infrastructure.models import Base
 
 config = context.config
+database_config = PostgreSQLSettings()
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

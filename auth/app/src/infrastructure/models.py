@@ -4,12 +4,12 @@ import uuid
 from datetime import date
 
 import sqlalchemy as sa
-from config import database_config
+from config import PostgreSQLSettings
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from src.domain.role.value_objects import AccessLevel
 from src.infrastructure.mixins import IDMixin, TimestampMixin
 
-metadata = sa.MetaData(schema=database_config.db_schema)
+metadata = sa.MetaData(schema=PostgreSQLSettings().db_schema)
 
 
 class Base(DeclarativeBase):

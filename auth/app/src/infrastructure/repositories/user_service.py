@@ -3,6 +3,7 @@
 import uuid
 from typing import Any
 
+import backoff
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -32,6 +33,12 @@ class UserServiceRepository(IUserServiceRepository):
         """
         self._session = session
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def insert(self, user_service: UserService) -> UserService:
         """Add a new User Service info.
 
@@ -68,6 +75,12 @@ class UserServiceRepository(IUserServiceRepository):
             role=user_service.role,
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_id(self, uid: uuid.UUID) -> UserService:
         """Retrieve User Service info by user ID.
 
@@ -82,6 +95,12 @@ class UserServiceRepository(IUserServiceRepository):
         )
         return await self._retrieve_one(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def update_active_status(
         self, uid: uuid.UUID, active_status: bool,
     ) -> UserService:
@@ -113,6 +132,12 @@ class UserServiceRepository(IUserServiceRepository):
         )
         return await self._retrieve_one(select_stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def update_verification_status(
         self, uid: uuid.UUID, verified_status: bool,
     ) -> UserService:
@@ -144,6 +169,12 @@ class UserServiceRepository(IUserServiceRepository):
         )
         return await self._retrieve_one(select_stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def update_role(self, uid: uuid.UUID, role: Role) -> UserService:
         """Update the role of a user service.
 
@@ -185,6 +216,12 @@ class UserServiceRepository(IUserServiceRepository):
             role=role,
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def _retrieve_one(self, stmt: Select[Any]) -> UserService:
         """Retrieve User Service by some statement.
 

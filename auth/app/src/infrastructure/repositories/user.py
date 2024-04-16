@@ -4,6 +4,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+import backoff
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -32,6 +33,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         """
         self._session = session
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def insert(self, user: User) -> User:
         """Add a new user.
 
@@ -87,6 +94,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
             user_service=user.user_service,
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_id(self, uid: uuid.UUID) -> User:
         """Retrieve User by that ID.
 
@@ -101,6 +114,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_email(self, email: str) -> User:
         """Retrieve User by that email.
 
@@ -115,6 +134,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_login(self, login: str) -> User:
         """Retrieve User by that login.
 
@@ -129,6 +154,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_email_or_login(self, email: str, login: str) -> User:
         """Retrieve User by login or email.
 
@@ -144,6 +175,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def change_email(self, uid: uuid.UUID, email: str) -> User:
         """Change the email of user with that ID.
 
@@ -173,6 +210,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(retrieve_stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def change_login(self, uid: uuid.UUID, login: str) -> User:
         """Change the login of user with that ID.
 
@@ -202,6 +245,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(retrieve_stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def change_password(self, uid: uuid.UUID, password: str) -> User:
         """Change the password of user with that ID.
 
@@ -231,6 +280,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(retrieve_stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def update_additional_info(  # noqa: WPS210 (Too many variables.)
         self, uid: uuid.UUID, user_additional_fields: UserAdditionalFields,
     ) -> User:
@@ -273,6 +328,12 @@ class UserRepository(IUserRepository):  # noqa: WPS214 (Too many methods.)
         )
         return await self._retrieve_data(retrieve_stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def _retrieve_data(self, stmt: Select[Any]) -> User:
         """Retrieve User by some statement.
 

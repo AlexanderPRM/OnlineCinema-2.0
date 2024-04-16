@@ -1,6 +1,10 @@
 """Module with Database class."""
 
-from pydantic import PostgresDsn, RedisDsn
+from typing import Any, AsyncGenerator
+
+from config import PostgreSQLSettings, RedisSettings
+from pydantic import PostgresDsn
+from redis.asyncio import ConnectionPool
 from redis.asyncio import Redis as RedisClient
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -12,12 +16,25 @@ from sqlalchemy.ext.asyncio import (
 class PostgreSQL:
     """Class for work with PostgreSQL."""
 
-    def __init__(self, dsn: PostgresDsn) -> None:
+    def __init__(self, config: PostgreSQLSettings) -> None:
         """Init method.
 
         Args:
-            dsn (PostgresDsn): PostgreSQL Data Source Name..
+            config (PostgreSQLSettings): Settings for PostgreSQL.
         """
+        self._config = config
+
+        dsn = PostgresDsn(
+            '{driver}://{user}:{password}@{host}:{port}/{name}'.format(
+                driver=self._config.db_driver,
+                user=self._config.db_user,
+                password=self._config.db_password,
+                host=self._config.db_host,
+                port=self._config.db_port,
+                name=self._config.db_name,
+            ),
+        )
+
         self._engine = create_async_engine(
             url=str(dsn),
             echo=True,
@@ -27,7 +44,8 @@ class PostgreSQL:
             expire_on_commit=False,
         )
 
-    def get_sessionmaker(self) -> async_sessionmaker[AsyncSession]:
+    @property
+    def sessionmaker(self) -> async_sessionmaker[AsyncSession]:
         """Get async session maker.
 
         Returns:
@@ -39,18 +57,41 @@ class PostgreSQL:
 class Redis:
     """Class for work with Redis."""
 
-    def __init__(self, dsn: RedisDsn) -> None:
+    def __init__(self, redis: RedisClient) -> None:
         """Init method.
 
         Args:
-            dsn (RedisDsn): Redis Data Source Name.
+            redis (RedisClient): Redis connection client.
         """
-        self._redis = RedisClient.from_url(str(dsn))
+        self._redis = redis
 
-    def get_client(self) -> RedisClient:
+    @property
+    def client(self) -> RedisClient:
         """Get redis client.
 
         Returns:
             RedisClient: Redis client instance.
         """
         return self._redis
+
+
+async def init_redis(
+    config: RedisSettings,
+) -> AsyncGenerator[RedisClient, Any]:
+    """Initialize redis connection pool.
+
+    Args:
+        config (RedisSettings): Configuration for redis.
+
+    Yields:
+        Iterator[AsyncGenerator[RedisClient, Any]]: Yield redis client.
+    """
+    connection_pool = ConnectionPool(
+        host=config.redis_host,
+        port=config.redis_port,
+        username=config.redis_user,
+        password=config.redis_password,
+        max_connections=config.max_connections,
+    )
+    async with RedisClient(connection_pool=connection_pool) as redis:
+        yield redis

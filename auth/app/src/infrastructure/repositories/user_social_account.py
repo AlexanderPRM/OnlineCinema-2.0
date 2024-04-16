@@ -3,6 +3,7 @@
 import uuid
 from typing import Any
 
+import backoff
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
@@ -30,6 +31,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         """
         self._session = session
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def insert(self, entity: UserSocialAccount) -> UserSocialAccount:
         """Add a new social account for user.
 
@@ -66,6 +73,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
             ),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def delete_by_id(self, user_social_account_id: uuid.UUID) -> None:
         """Delete social account by ID.
 
@@ -77,6 +90,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         await self._session.execute(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def delete_by_user_and_social_network(
         self, uid: uuid.UUID, social_network_id: uuid.UUID,
     ) -> None:
@@ -94,6 +113,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         await self._session.execute(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_id(
         self, user_social_account_id: uuid.UUID,
     ) -> UserSocialAccount:
@@ -110,6 +135,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         return await self._retrieve_one(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_user_id(
         self, uid: uuid.UUID,
     ) -> list[UserSocialAccount]:
@@ -126,6 +157,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         return await self._retrieve_all(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_social_network_id(
         self, social_network_id: uuid.UUID,
     ) -> list[UserSocialAccount]:
@@ -142,6 +179,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         return await self._retrieve_all(stmt)
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def _retrieve_one(self, stmt: Select[Any]) -> UserSocialAccount:
         """Retrieve one record by some statement.
 
@@ -165,6 +208,12 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
             ),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def _retrieve_all(
         self, stmt: Select[Any],
     ) -> list[UserSocialAccount]:

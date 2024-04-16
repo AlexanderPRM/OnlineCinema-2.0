@@ -3,12 +3,14 @@
 import uuid
 from typing import Any
 
+import backoff
 import sqlalchemy as sa
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, TimeoutError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
 from src.domain.repositories.role.exceptions import (
-    RoleAlreadyExists,
+    BaseRoleNotFoundError,
+    RoleAlreadyExistsError,
     RoleNotFoundError,
 )
 from src.domain.repositories.role.repo import IRoleRepository
@@ -25,7 +27,10 @@ class RoleRepository(IRoleRepository):
         IRoleRepository (class): Abstract Role Repository.
     """
 
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(
+        self,
+        session: AsyncSession,
+    ) -> None:
         """Init method.
 
         Args:
@@ -33,6 +38,12 @@ class RoleRepository(IRoleRepository):
         """
         self._session = session
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def insert(self, role: Role) -> Role:
         """Add a new role.
 
@@ -40,7 +51,7 @@ class RoleRepository(IRoleRepository):
             role (Role): entity of Role class.
 
         Raises:
-            RoleAlreadyExists: If role with that name already exists.
+            RoleAlreadyExistsError: If role with that name already exists.
 
         Returns:
             Role (class): New Role class with new created role object info.
@@ -62,7 +73,7 @@ class RoleRepository(IRoleRepository):
         try:
             res = await self._session.execute(stmt)
         except IntegrityError as exc:
-            raise RoleAlreadyExists from exc
+            raise RoleAlreadyExistsError from exc
 
         fetch = res.one()
         return Role(
@@ -76,6 +87,12 @@ class RoleRepository(IRoleRepository):
             ),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_id(self, role_id: uuid.UUID) -> Role:
         """Retrieve role by role ID from storage.
 
@@ -100,6 +117,12 @@ class RoleRepository(IRoleRepository):
             RoleDTO(**record.__dict__),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_name(self, name: str) -> Role:
         """Retrieve role by role name from storage.
 
@@ -124,6 +147,39 @@ class RoleRepository(IRoleRepository):
             RoleDTO(**record.__dict__),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
+    async def retrieve_base_role(self) -> Role:
+        """Retrieve base role by name from storage.
+
+        Raises:
+            BaseRoleNotFoundError: If role not found, throw this error.
+
+        Returns:
+            Role: Entity of Role.
+        """
+        stmt: Select[Any] = sa.Select(RoleORM).where(
+            RoleORM.name == 'base',
+        )
+        res = await self._session.execute(stmt)
+        fetch = res.one_or_none()
+        if not fetch:
+            raise BaseRoleNotFoundError
+        record: RoleORM = fetch[0]
+        return Role(
+            RoleDTO(**record.__dict__),
+        )
+
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def update_access_level(
         self, role_id: uuid.UUID, access_level: AccessLevel,
     ) -> Role:
@@ -164,6 +220,12 @@ class RoleRepository(IRoleRepository):
             ),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def update_description(
         self,
         role_id: uuid.UUID,

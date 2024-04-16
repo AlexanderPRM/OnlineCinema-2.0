@@ -7,7 +7,6 @@ from src.domain.repositories.user.exceptions import (
 from src.domain.role.entities import Role
 from src.domain.user.entities import User
 from src.domain.user_service.entities import UserService
-from src.use_cases.exceptions import BaseRoleNotExists
 from src.use_cases.interfaces.cache.unit_of_work import (
     AbstractUnitOfWork as CacheUoW,
 )
@@ -18,7 +17,7 @@ from src.use_cases.interfaces.tokens.entities import ITokenCreator
 from src.use_cases.user.dto import UserSignUpDTO, UserSignUpOutDTO
 
 
-class RegisterUseCase:
+class SignUpUseCase:
     """User Register Use Case."""
 
     def __init__(
@@ -46,7 +45,6 @@ class RegisterUseCase:
 
         Raises:
             UserAlreadyExists: User Already Exists Exception.
-            BaseRoleNotExists: Base Role for New users not exists.
 
         Returns:
             UserSignUpOutDTO: Output use case info.
@@ -56,10 +54,7 @@ class RegisterUseCase:
             raise UserAlreadyExists
 
         async with self.database_uow(autocommit=True):
-            role = await self.database_uow.role.retrieve_by_name('base')
-
-        if not role:
-            raise BaseRoleNotExists
+            role = await self.database_uow.role.retrieve_base_role()
 
         created_user = await self._insert_user(
             role, dto.email, dto.login, dto.password,
@@ -88,7 +83,7 @@ class RegisterUseCase:
         Returns:
             bool: Exists or Not.
         """
-        async with self.database_uow(autocommit=True):
+        async with self.database_uow(autocommit=False):
             try:
                 await self.database_uow.user.retrieve_by_email_or_login(
                     email,

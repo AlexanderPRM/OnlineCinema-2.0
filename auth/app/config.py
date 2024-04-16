@@ -1,55 +1,65 @@
 """Module with project configuration."""
 
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class UserSettings(BaseSettings):
+class BaseServiceSettings(BaseSettings):
+    """Base meta config for Settings."""
+
+    model_config = SettingsConfigDict(
+        env_file=('.env', '.env.prod'),
+        extra='ignore',
+        case_sensitive=True,
+    )
+
+
+class UserSettings(BaseServiceSettings):
     """User Configuration.
 
     Args:
         BaseSettings (class): Base Pydantic class for Settings.
     """
 
-    model_config = SettingsConfigDict(
-        env_file=('.env', '.env.prod'),
-        extra='ignore',
-    )
-
     default_user_role: str
 
 
-class DatabaseSettings(BaseSettings):
+class PostgreSQLSettings(BaseServiceSettings):
     """Database Configuration.
 
     Args:
         BaseSettings (class): Base Pydantic class for Settings.
     """
 
-    model_config = SettingsConfigDict(
-        env_file=('.env', '.env.prod'),
-        extra='ignore',
-    )
-
     db_driver: str
     db_host: str
-    db_port: str
+    db_port: int
     db_user: str
     db_password: str
     db_name: str
     db_schema: str
 
 
-class TokensSettings(BaseSettings):
-    """Tokens Configuration.
+class RedisSettings(BaseServiceSettings):
+    """Redis Configuration.
 
     Args:
         BaseSettings (class): Base Pydantic class for Settings.
     """
 
-    model_config = SettingsConfigDict(
-        env_file=('.env', '.env.prod'),
-        extra='ignore',
-    )
+    redis_host: str
+    redis_port: int
+    redis_user: str
+    redis_password: str
+    max_connections: int
+
+
+class TokensSettings(BaseServiceSettings):
+    """Tokens Configuration.
+
+    Args:
+        BaseSettings (class): Base Pydantic class for Settings.
+    """
 
     jwt_secret: str
     encryption_algorithm: str
@@ -57,6 +67,14 @@ class TokensSettings(BaseSettings):
     refresh_token_expiration: int
 
 
-user_config = UserSettings()
-database_config = DatabaseSettings()
-tokens_settings = TokensSettings()
+class ProjectSettings(BaseModel):
+    """Project configuration.
+
+    Args:
+        BaseModel (class): Base Pydantic class for Models.
+    """
+
+    user_settings: UserSettings = UserSettings()
+    postgresql_settings: PostgreSQLSettings = PostgreSQLSettings()
+    redis_settings: RedisSettings = RedisSettings()
+    tokens_settings: TokensSettings = TokensSettings()

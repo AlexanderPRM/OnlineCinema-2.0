@@ -4,6 +4,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+import backoff
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
@@ -31,6 +32,12 @@ class SocialNetworkRepository(ISocialNetworkRepository):
         """
         self._session = session
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def insert(self, entity: SocialNetwork) -> SocialNetwork:
         """Add a new social network.
 
@@ -66,6 +73,12 @@ class SocialNetworkRepository(ISocialNetworkRepository):
             ),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def retrieve_by_id(
         self,
         social_network_id: uuid.UUID,
@@ -140,6 +153,12 @@ class SocialNetworkRepository(ISocialNetworkRepository):
             ),
         )
 
+    @backoff.on_exception(
+        backoff.expo,
+        exception=TimeoutError,
+        max_time=10,
+        max_tries=3,
+    )
     async def _retrieve_data(
         self, stmt: Select[Any],
     ) -> SocialNetwork:
