@@ -12,7 +12,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 5s
+      start_period: 3s
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
@@ -23,6 +23,12 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 3s
     environment:
       - REDIS_HOST=localhost
       - REDIS_PORT=6379
@@ -35,8 +41,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
-      - postgres
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
