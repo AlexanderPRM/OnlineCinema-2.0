@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo "Waiting Database..."
+echo "Waiting Main Database..."
 
 while ! nc -z $db_host $db_port; do
     sleep 0.1
 done
 
-echo "Database started"
+echo "Main Database started"
 
 echo "Waiting Cache database..."
 
