@@ -5,6 +5,7 @@ from typing import Any
 
 import backoff
 import sqlalchemy as sa
+from config import UserSettings
 from sqlalchemy.exc import IntegrityError, TimeoutError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
@@ -162,8 +163,9 @@ class RoleRepository(IRoleRepository):
         Returns:
             Role: Entity of Role.
         """
+        user_config = UserSettings()
         stmt: Select[Any] = sa.Select(RoleORM).where(
-            RoleORM.name == 'base',
+            RoleORM.name == user_config.default_user_role,
         )
         res = await self._session.execute(stmt)
         fetch = res.one_or_none()

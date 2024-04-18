@@ -1,5 +1,7 @@
 """Module with users API handlers."""
 
+from http import HTTPStatus
+
 from containers import Container
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
@@ -14,7 +16,24 @@ router = APIRouter()
 
 @router.post(
     path='/signup/',
+    status_code=HTTPStatus.CREATED,
     response_model=UserSignUpOutDTO,
+    responses={
+        HTTPStatus.NOT_FOUND: {
+            'content': {
+                'application/json': {
+                    'example': {'detail': BASE_ROLE_NOT_FOUND.detail},
+                },
+            },
+        },
+        HTTPStatus.CONFLICT: {
+            'content': {
+                'application/json': {
+                    'example': {'detail': USER_ALREADY_EXISTS.detail},
+                },
+            },
+        },
+    },
 )
 @inject
 async def signup(

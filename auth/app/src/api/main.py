@@ -2,8 +2,10 @@
 
 from contextlib import asynccontextmanager
 
+from config import APISettings
 from containers import Container
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from src import api
 from src.api.routers import init_routers
 
@@ -21,6 +23,13 @@ async def lifespan(app: FastAPI):
     async with Container.lifespan(wireable_packages=[api]):
         yield
 
+config = APISettings()
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    title='Auth API.',
+    debug=not config.production,
+    default_response_class=ORJSONResponse,
+)
+
 init_routers(app)

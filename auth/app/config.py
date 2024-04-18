@@ -5,7 +5,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class BaseServiceSettings(BaseSettings):
-    """Base meta config for Settings."""
+    """Base meta config for Settings.
+
+    Args:
+        BaseSettings (class): Base Pydantic class for Settings
+    """
 
     model_config = SettingsConfigDict(
         env_file=('.env', '.env.prod'),
@@ -14,22 +18,22 @@ class BaseServiceSettings(BaseSettings):
     )
 
 
-class UserSettings(BaseServiceSettings):
-    """User Configuration.
+class APISettings(BaseServiceSettings):
+    """API configuration."""
 
-    Args:
-        BaseSettings (class): Base Pydantic class for Settings.
-    """
+    production: bool
+    api_title: str
+    api_version: str
+
+
+class UserSettings(BaseServiceSettings):
+    """User Configuration."""
 
     default_user_role: str
 
 
 class PostgreSQLSettings(BaseServiceSettings):
-    """Database Configuration.
-
-    Args:
-        BaseSettings (class): Base Pydantic class for Settings.
-    """
+    """Database Configuration."""
 
     db_driver: str
     db_host: str
@@ -41,11 +45,7 @@ class PostgreSQLSettings(BaseServiceSettings):
 
 
 class RedisSettings(BaseServiceSettings):
-    """Redis Configuration.
-
-    Args:
-        BaseSettings (class): Base Pydantic class for Settings.
-    """
+    """Redis Configuration."""
 
     redis_host: str
     redis_port: int
@@ -55,11 +55,7 @@ class RedisSettings(BaseServiceSettings):
 
 
 class TokensSettings(BaseServiceSettings):
-    """Tokens Configuration.
-
-    Args:
-        BaseSettings (class): Base Pydantic class for Settings.
-    """
+    """Tokens Configuration."""
 
     jwt_secret: str
     encryption_algorithm: str
@@ -68,11 +64,7 @@ class TokensSettings(BaseServiceSettings):
 
 
 class ProjectSettings(BaseModel):
-    """Project configuration.
-
-    Args:
-        BaseModel (class): Base Pydantic class for Models.
-    """
+    """Project configuration."""
 
     user_settings: UserSettings = UserSettings()
     postgresql_settings: PostgreSQLSettings = PostgreSQLSettings()
