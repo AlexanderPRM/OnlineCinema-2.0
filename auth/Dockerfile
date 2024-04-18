@@ -18,5 +18,7 @@ COPY run.sh .
 
 COPY app/ app/
 
+EXPOSE 8000
+
 RUN chmod +x /opt/auth/run.sh
 ENTRYPOINT [ "/opt/auth/run.sh" ]
