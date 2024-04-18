@@ -9,10 +9,10 @@ services:
       - POSTGRES_DB=develop
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d develop"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 3s
+      start_period: 1s
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
@@ -25,10 +25,10 @@ services:
       - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 3s
+      start_period: 1s
     environment:
       - REDIS_HOST=localhost
       - REDIS_PORT=6379
