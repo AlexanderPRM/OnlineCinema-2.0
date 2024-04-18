@@ -28,6 +28,7 @@ config = APISettings()
 app = FastAPI(
     lifespan=lifespan,
     title='Auth API.',
+    root_path='/auth',
     debug=not config.production,
     default_response_class=ORJSONResponse,
 )
