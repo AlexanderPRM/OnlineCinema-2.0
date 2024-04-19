@@ -1,3 +1,9 @@
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AlexanderPRM/OnlineCInema-2.0/linters.yaml)
+![License](https://img.shields.io/github/license/AlexanderPRM/OnlineCinema-2.0.svg)
+![GitHub repo size](https://img.shields.io/github/repo-size/AlexanderPRM/OnlineCinema-2.0)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AlexanderPRM/OnlineCinema-2.0)
+![GitHub Release](https://img.shields.io/github/v/release/AlexanderPRM/OnlineCinema-2.0)
+
 # OnlineCinema-2.0
 
 Repository for the development of a new Online Cinema with new functionality and fixed bugs. Project consists of several microservices, which collectively provide functionality of online cinema.
