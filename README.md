@@ -26,6 +26,16 @@ Each microservice directory has a two README files on english and russian with d
 
 ## How start a project?
 
+Each microservice have two files:
+
+```bash
+[microservice_name]
+   ├── .env.example
+   ├── .env.prod.example
+```
+
+For start you need remove .example extension, file .env used for develop, and file .env.prod for production. If you want launch project in production mode, please fill the variables in file .env.prod
+
 Project root has ./start.sh file written in Bash.
 It contains commands for start the project.
 
