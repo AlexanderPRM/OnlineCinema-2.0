@@ -6,6 +6,7 @@ from typing import Annotated
 
 import pydantic as pd
 from passlib.context import CryptContext
+from pydantic_core import PydanticCustomError
 from src.domain.user.dto import UserDTO
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -37,13 +38,41 @@ class UserSignUpDTO(pd.BaseModel):
         return self
 
 
-class UserSignUpOutDTO(pd.BaseModel):
+class UserSignInDTO(pd.BaseModel):
+    """User sign in data transfer object.
+
+    Args:
+        BaseModel (class): Base pydantic class for models.
+    """
+
+    credential: Annotated[
+        str, pd.StringConstraints(strip_whitespace=True),
+    ]
+    password: Annotated[
+        str, pd.StringConstraints(strip_whitespace=True),
+    ]
+
+    @property
+    def credential_is_email(self) -> bool:
+        """Check credential is email.
+
+        Returns:
+            bool: True if credential is email.
+        """
+        try:
+            pd.validate_email(self.credential)
+        except PydanticCustomError:
+            return False
+        return True
+
+
+class UserOutDTO(pd.BaseModel):
     """User sign up output data transfer object.
 
     Args:
         BaseModel (class): Base Pydantic class for models.
     """
 
-    created_user: UserDTO
+    user: UserDTO
     access_token: str
     refresh_token: str

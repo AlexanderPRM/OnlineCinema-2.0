@@ -12,3 +12,7 @@ BASE_ROLE_NOT_FOUND = HTTPException(
     status_code=HTTPStatus.NOT_FOUND,
     detail='Base role for users not found.',
 )
+CREDENTIAL_OR_PASSWORD_NOT_CORRECT = HTTPException(
+    status_code=HTTPStatus.UNAUTHORIZED,
+    detail='Credential or password not correct.',
+)
