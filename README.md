@@ -36,6 +36,8 @@ Each microservice have two files:
 
 For start you need remove .example extension, file .env used for develop, and file .env.prod for production. If you want launch project in production mode, please fill the variables in file .env.prod
 
+Every microservice use Sentry for logging, please fill DSN in env files if you want use them. [**Landing of technology**](https://sentry.io/)
+
 Project root has ./start.sh file written in Bash.
 It contains commands for start the project.
 
