@@ -10,7 +10,7 @@ python-dotenv==1.0.0
 pydantic[email]==2.6.0
 pydantic-settings==2.2.1
 
-fastapi==0.109.0
+fastapi==0.109.1
 sentry-sdk[fastapi]==1.45.0
 orjson==3.10.0
 
