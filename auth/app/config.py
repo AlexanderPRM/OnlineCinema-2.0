@@ -18,6 +18,13 @@ class BaseServiceSettings(BaseSettings):
     )
 
 
+class LoggingSettings(BaseServiceSettings):
+    """Logging configuration."""
+
+    use_sentry: bool
+    sentry_dsn: str
+
+
 class APISettings(BaseServiceSettings):
     """API configuration."""
 
