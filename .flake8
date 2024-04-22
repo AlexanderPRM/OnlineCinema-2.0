@@ -16,6 +16,6 @@ per-file-ignores =
   # For logging templates (%s formating)
   logging.py: WPS323
 
-max-imports = 20
+max-imports = 25
 max-local-variables=8
 max-methods=10

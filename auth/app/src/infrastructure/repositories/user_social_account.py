@@ -1,5 +1,6 @@
 """Module with User social account."""
 
+import logging
 import uuid
 from typing import Any
 
@@ -14,8 +15,21 @@ from src.domain.user_social_account.dto import UserSocialAccountDTO
 from src.domain.user_social_account.entities import UserSocialAccount
 from src.domain.user_social_account.exceptions import UserSocialAccountNotFound
 from src.infrastructure.models import UserSocialAccount as UserSocialAccountORM
+from src.infrastructure.repositories.base import decorate_all_methods
+
+logger = logging.getLogger(__name__)
 
 
+@decorate_all_methods(
+    backoff.on_exception,
+    wait_gen=backoff.expo,
+    exception=TimeoutError,
+    max_time=10,
+    max_tries=3,
+    logger=logger,
+    backoff_log_level=logging.WARNING,
+    giveup_log_level=logging.CRITICAL,
+)
 class UserSocialAccountRepository(IUserSocialAccountRepository):
     """Repository with users social accounts objects.
 
@@ -31,12 +45,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         """
         self._session = session
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def insert(self, entity: UserSocialAccount) -> UserSocialAccount:
         """Add a new social account for user.
 
@@ -73,12 +81,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
             ),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def delete_by_id(self, user_social_account_id: uuid.UUID) -> None:
         """Delete social account by ID.
 
@@ -90,12 +92,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         await self._session.execute(stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def delete_by_user_and_social_network(
         self, uid: uuid.UUID, social_network_id: uuid.UUID,
     ) -> None:
@@ -113,12 +109,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         await self._session.execute(stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_id(
         self, user_social_account_id: uuid.UUID,
     ) -> UserSocialAccount:
@@ -135,12 +125,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         return await self._retrieve_one(stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_user_id(
         self, uid: uuid.UUID,
     ) -> list[UserSocialAccount]:
@@ -157,12 +141,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         return await self._retrieve_all(stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_social_network_id(
         self, social_network_id: uuid.UUID,
     ) -> list[UserSocialAccount]:
@@ -179,12 +157,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
         )
         return await self._retrieve_all(stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def _retrieve_one(self, stmt: Select[Any]) -> UserSocialAccount:
         """Retrieve one record by some statement.
 
@@ -208,12 +180,6 @@ class UserSocialAccountRepository(IUserSocialAccountRepository):
             ),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def _retrieve_all(
         self, stmt: Select[Any],
     ) -> list[UserSocialAccount]:
