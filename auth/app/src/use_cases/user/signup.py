@@ -8,13 +8,13 @@ from src.domain.role.entities import Role
 from src.domain.user.entities import User
 from src.domain.user_service.entities import UserService
 from src.use_cases.interfaces.cache.unit_of_work import (
-    AbstractUnitOfWork as CacheUoW,
+    AbstractUnitOfWork as AbstractCacheUnitOfWork,
 )
 from src.use_cases.interfaces.database.unit_of_work import (
-    AbstractUnitOfWork as DatabaseUoW,
+    AbstractUnitOfWork as AbstractDatabaseUnitOfWork,
 )
 from src.use_cases.interfaces.tokens.entities import ITokenCreator
-from src.use_cases.user.dto import UserSignUpDTO, UserSignUpOutDTO
+from src.use_cases.user.dto import UserOutDTO, UserSignUpDTO
 
 
 class SignUpUseCase:
@@ -22,22 +22,23 @@ class SignUpUseCase:
 
     def __init__(
         self,
-        cache_uow: CacheUoW,
-        database_uow: DatabaseUoW,
+        cache_uow: AbstractCacheUnitOfWork,
+        database_uow: AbstractDatabaseUnitOfWork,
         tokens: ITokenCreator,
     ) -> None:
         """Init method.
 
         Args:
-            cache_uow (CacheUoW): Unit of Work with Cache.
-            database_uow (DatabaseUoW): Unit of Work with main Database.
+            cache_uow (AbstractCacheUnitOfWork): Unit of Work with Cache.
+            database_uow (AbstractDatabaseUnitOfWork):
+            Unit of Work with main Database.
             tokens (ITokenCreator): Fabric for create Tokens.
         """
         self.cache_uow = cache_uow
         self.database_uow = database_uow
         self.tokens = tokens
 
-    async def execute(self, dto: UserSignUpDTO) -> UserSignUpOutDTO:
+    async def execute(self, dto: UserSignUpDTO) -> UserOutDTO:
         """Register User.
 
         Args:
@@ -47,7 +48,7 @@ class SignUpUseCase:
             UserAlreadyExists: User Already Exists Exception.
 
         Returns:
-            UserSignUpOutDTO: Output use case info.
+            UserOutDTO: Output info of that use case.
         """
         exists = await self._check_user_exists(dto.email, dto.login)
         if exists:
@@ -67,8 +68,8 @@ class SignUpUseCase:
                 created_user.id, refresh_token,
             )
 
-        return UserSignUpOutDTO(
-            created_user=created_user.as_dto(),
+        return UserOutDTO(
+            user=created_user.as_dto(),
             access_token=access_token.get_encoded_token(),
             refresh_token=refresh_token.get_encoded_token(),
         )

@@ -5,8 +5,8 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
-from config import ProjectSettings
 from dependency_injector import containers, providers
+from src.config import ProjectSettings
 from src.infrastructure.databases import PostgreSQL, Redis, init_redis
 from src.infrastructure.interfaces.cache.unit_of_work import (
     UnitOfWork as RedisUnifOfWork,
@@ -16,6 +16,7 @@ from src.infrastructure.interfaces.database.unit_of_work import (
 )
 from src.infrastructure.interfaces.tokens.entities import TokenCreator
 from src.infrastructure.interfaces.tokens.key_schema import KeySchema
+from src.use_cases.user.signin import SignInUseCase
 from src.use_cases.user.signup import SignUpUseCase
 
 
@@ -67,6 +68,13 @@ class Container(containers.DeclarativeContainer):
 
     signup_use_case = providers.Factory(
         SignUpUseCase,
+        cache_uow=redis.container.uow,
+        database_uow=postgresql.container.uow,
+        tokens=token_creator.provided,
+    )
+
+    signin_use_case = providers.Factory(
+        SignInUseCase,
         cache_uow=redis.container.uow,
         database_uow=postgresql.container.uow,
         tokens=token_creator.provided,

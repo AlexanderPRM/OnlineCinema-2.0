@@ -4,8 +4,8 @@ import uuid
 from datetime import date
 
 import sqlalchemy as sa
-from config import PostgreSQLSettings
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from src.config import PostgreSQLSettings
 from src.domain.role.value_objects import AccessLevel
 from src.infrastructure.mixins import IDMixin, TimestampMixin
 

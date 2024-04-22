@@ -2,7 +2,6 @@
 
 from typing import Any, AsyncGenerator
 
-from config import PostgreSQLSettings, RedisSettings
 from pydantic import PostgresDsn
 from redis.asyncio import ConnectionPool
 from redis.asyncio import Redis as RedisClient
@@ -11,6 +10,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from src.config import PostgreSQLSettings, RedisSettings
 
 
 class PostgreSQL:
