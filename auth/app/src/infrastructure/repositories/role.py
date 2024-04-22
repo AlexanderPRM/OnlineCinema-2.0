@@ -1,5 +1,6 @@
 """Module with Role Repository."""
 
+import logging
 import uuid
 from typing import Any
 
@@ -19,8 +20,21 @@ from src.domain.role.dto import RoleDTO
 from src.domain.role.entities import Role
 from src.domain.role.value_objects import AccessLevel
 from src.infrastructure.models import Role as RoleORM
+from src.infrastructure.repositories.base import decorate_all_methods
+
+logger = logging.getLogger(__name__)
 
 
+@decorate_all_methods(
+    backoff.on_exception,
+    wait_gen=backoff.expo,
+    exception=TimeoutError,
+    max_time=10,
+    max_tries=3,
+    logger=logger,
+    backoff_log_level=logging.WARNING,
+    giveup_log_level=logging.CRITICAL,
+)
 class RoleRepository(IRoleRepository):
     """Implemented repository with Role objects.
 
@@ -39,12 +53,6 @@ class RoleRepository(IRoleRepository):
         """
         self._session = session
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def insert(self, role: Role) -> Role:
         """Add a new role.
 
@@ -88,12 +96,6 @@ class RoleRepository(IRoleRepository):
             ),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_id(self, role_id: uuid.UUID) -> Role:
         """Retrieve role by role ID from storage.
 
@@ -118,12 +120,6 @@ class RoleRepository(IRoleRepository):
             RoleDTO(**record.__dict__),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_name(self, name: str) -> Role:
         """Retrieve role by role name from storage.
 
@@ -148,12 +144,6 @@ class RoleRepository(IRoleRepository):
             RoleDTO(**record.__dict__),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_base_role(self) -> Role:
         """Retrieve base role by name from storage.
 
@@ -176,12 +166,6 @@ class RoleRepository(IRoleRepository):
             RoleDTO(**record.__dict__),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def update_access_level(
         self, role_id: uuid.UUID, access_level: AccessLevel,
     ) -> Role:
@@ -222,12 +206,6 @@ class RoleRepository(IRoleRepository):
             ),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def update_description(
         self,
         role_id: uuid.UUID,

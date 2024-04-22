@@ -1,5 +1,6 @@
 """Module with Social Network repository."""
 
+import logging
 import uuid
 from pathlib import Path
 from typing import Any
@@ -15,8 +16,21 @@ from src.domain.social_network.dto import SocialNetworkDTO
 from src.domain.social_network.entities import SocialNetwork
 from src.domain.social_network.exceptions import SocialNetworkNotFound
 from src.infrastructure.models import SocialNetwork as SocialNetworkORM
+from src.infrastructure.repositories.base import decorate_all_methods
+
+logger = logging.getLogger(__name__)
 
 
+@decorate_all_methods(
+    backoff.on_exception,
+    wait_gen=backoff.expo,
+    exception=TimeoutError,
+    max_time=10,
+    max_tries=3,
+    logger=logger,
+    backoff_log_level=logging.WARNING,
+    giveup_log_level=logging.CRITICAL,
+)
 class SocialNetworkRepository(ISocialNetworkRepository):
     """Repository with social network objects.
 
@@ -32,12 +46,6 @@ class SocialNetworkRepository(ISocialNetworkRepository):
         """
         self._session = session
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def insert(self, entity: SocialNetwork) -> SocialNetwork:
         """Add a new social network.
 
@@ -73,12 +81,6 @@ class SocialNetworkRepository(ISocialNetworkRepository):
             ),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_id(
         self,
         social_network_id: uuid.UUID,
@@ -153,12 +155,6 @@ class SocialNetworkRepository(ISocialNetworkRepository):
             ),
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def _retrieve_data(
         self, stmt: Select[Any],
     ) -> SocialNetwork:

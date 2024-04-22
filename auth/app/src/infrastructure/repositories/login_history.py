@@ -1,5 +1,6 @@
 """Module with LoginHistoryRepository."""
 
+import logging
 import uuid
 from typing import Any, Optional
 
@@ -15,8 +16,21 @@ from src.domain.repositories.login_history.repo import ILoginHistoryRepository
 from src.domain.social_network.dto import SocialNetworkDTO
 from src.domain.social_network.entities import SocialNetwork
 from src.infrastructure.models import LoginHistory as LoginHistoryORM
+from src.infrastructure.repositories.base import decorate_all_methods
+
+logger = logging.getLogger(__name__)
 
 
+@decorate_all_methods(
+    backoff.on_exception,
+    wait_gen=backoff.expo,
+    exception=TimeoutError,
+    max_time=10,
+    max_tries=3,
+    logger=logger,
+    backoff_log_level=logging.WARNING,
+    giveup_log_level=logging.CRITICAL,
+)
 class LoginHistoryRepository(ILoginHistoryRepository):
     """Repository with login entries objects.
 
@@ -32,12 +46,6 @@ class LoginHistoryRepository(ILoginHistoryRepository):
         """
         self._session = session
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def insert(self, entity: LoginHistory) -> LoginHistory:
         """Add a new login entry.
 
@@ -71,12 +79,6 @@ class LoginHistoryRepository(ILoginHistoryRepository):
             social_network=entity.social_network,
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_id(self, login_entry_id: uuid.UUID) -> LoginHistory:
         """Retrieve login entry by ID.
 
@@ -114,12 +116,6 @@ class LoginHistoryRepository(ILoginHistoryRepository):
             social_network=social_network_entity,
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_user_id(self, uid: uuid.UUID) -> list[LoginHistory]:
         """Retrieve all login entries by user id.
 

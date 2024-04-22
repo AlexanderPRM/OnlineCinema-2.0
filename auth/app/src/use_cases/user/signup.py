@@ -1,5 +1,8 @@
 """Module with User Register use case."""
 
+import logging
+
+from src.domain.repositories.role.exceptions import BaseRoleNotFoundError
 from src.domain.repositories.user.exceptions import (
     UserAlreadyExists,
     UserNotFoundError,
@@ -15,6 +18,8 @@ from src.use_cases.interfaces.database.unit_of_work import (
 )
 from src.use_cases.interfaces.tokens.entities import ITokenCreator
 from src.use_cases.user.dto import UserOutDTO, UserSignUpDTO
+
+logger = logging.getLogger(__name__)
 
 
 class SignUpUseCase:
@@ -45,6 +50,7 @@ class SignUpUseCase:
             dto (UserSignUpDTO): DTO with info for user register.
 
         Raises:
+            BaseRoleNotFoundError: If base role for new user not found.
             UserAlreadyExists: User Already Exists Exception.
 
         Returns:
@@ -52,10 +58,20 @@ class SignUpUseCase:
         """
         exists = await self._check_user_exists(dto.email, dto.login)
         if exists:
+            logger.debug(
+                'Attempt to create a user [{email}, {login}],'.format(
+                    email=dto.email, login=dto.login,
+                )
+                + ' but it has already been created.',
+            )
             raise UserAlreadyExists
 
         async with self.database_uow(autocommit=True):
-            role = await self.database_uow.role.retrieve_base_role()
+            try:
+                role = await self.database_uow.role.retrieve_base_role()
+            except BaseRoleNotFoundError as err:
+                logger.error('Base role for new users not found.')
+                raise err
 
         created_user = await self._insert_user(
             role, dto.email, dto.login, dto.password,
@@ -68,6 +84,10 @@ class SignUpUseCase:
                 created_user.id, refresh_token,
             )
 
+        logger.info('New user created - [{email}, {login}]'.format(
+            email=dto.email, login=dto.login,
+            ),
+        )
         return UserOutDTO(
             user=created_user.as_dto(),
             access_token=access_token.get_encoded_token(),

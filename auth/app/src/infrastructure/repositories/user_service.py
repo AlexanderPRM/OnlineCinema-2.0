@@ -1,5 +1,6 @@
 """Module with User Service repository."""
 
+import logging
 import uuid
 from typing import Any
 
@@ -16,8 +17,21 @@ from src.domain.user_service.dto import UserServiceDTO
 from src.domain.user_service.entities import UserService
 from src.infrastructure.models import Role as RoleORM
 from src.infrastructure.models import UserService as UserServiceORM
+from src.infrastructure.repositories.base import decorate_all_methods
+
+logger = logging.getLogger(__name__)
 
 
+@decorate_all_methods(
+    backoff.on_exception,
+    wait_gen=backoff.expo,
+    exception=TimeoutError,
+    max_time=10,
+    max_tries=3,
+    logger=logger,
+    backoff_log_level=logging.WARNING,
+    giveup_log_level=logging.CRITICAL,
+)
 class UserServiceRepository(IUserServiceRepository):
     """Implement Repository with user service objects.
 
@@ -33,12 +47,6 @@ class UserServiceRepository(IUserServiceRepository):
         """
         self._session = session
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def insert(self, user_service: UserService) -> UserService:
         """Add a new User Service info.
 
@@ -75,12 +83,6 @@ class UserServiceRepository(IUserServiceRepository):
             role=user_service.role,
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def retrieve_by_id(self, uid: uuid.UUID) -> UserService:
         """Retrieve User Service info by user ID.
 
@@ -95,12 +97,6 @@ class UserServiceRepository(IUserServiceRepository):
         )
         return await self._retrieve_one(stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def update_active_status(
         self, uid: uuid.UUID, active_status: bool,
     ) -> UserService:
@@ -132,12 +128,6 @@ class UserServiceRepository(IUserServiceRepository):
         )
         return await self._retrieve_one(select_stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def update_verification_status(
         self, uid: uuid.UUID, verified_status: bool,
     ) -> UserService:
@@ -169,12 +159,6 @@ class UserServiceRepository(IUserServiceRepository):
         )
         return await self._retrieve_one(select_stmt)
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def update_role(self, uid: uuid.UUID, role: Role) -> UserService:
         """Update the role of a user service.
 
@@ -216,12 +200,6 @@ class UserServiceRepository(IUserServiceRepository):
             role=role,
         )
 
-    @backoff.on_exception(
-        backoff.expo,
-        exception=TimeoutError,
-        max_time=10,
-        max_tries=3,
-    )
     async def _retrieve_one(self, stmt: Select[Any]) -> UserService:
         """Retrieve User Service by some statement.
 
