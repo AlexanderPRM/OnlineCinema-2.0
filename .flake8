@@ -12,7 +12,10 @@ per-file-ignores =
   # For Dependency injection and HTTPExceptions raises.
   auth/app/src/api/*/*.py: WPS404, B008, WPS329
   # For configuration models
-  auth/app/config.py: WPS202
+  auth/app/src/config.py: WPS202
+  # For logging templates (%s formating)
+  logging.py: WPS323
+
 max-imports = 20
 max-local-variables=8
 max-methods=10

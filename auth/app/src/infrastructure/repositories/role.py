@@ -5,10 +5,10 @@ from typing import Any
 
 import backoff
 import sqlalchemy as sa
-from config import UserSettings
 from sqlalchemy.exc import IntegrityError, TimeoutError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
+from src.config import UserSettings
 from src.domain.repositories.role.exceptions import (
     BaseRoleNotFoundError,
     RoleAlreadyExistsError,

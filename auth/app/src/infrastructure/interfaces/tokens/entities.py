@@ -5,8 +5,8 @@ from __future__ import annotations
 import time
 from uuid import UUID
 
-from config import TokensSettings
 from jose import jwt
+from src.config import TokensSettings
 from src.use_cases.interfaces.tokens.entities import IToken, ITokenCreator
 
 

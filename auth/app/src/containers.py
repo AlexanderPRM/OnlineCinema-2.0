@@ -5,8 +5,8 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
-from config import ProjectSettings
 from dependency_injector import containers, providers
+from src.config import ProjectSettings
 from src.infrastructure.databases import PostgreSQL, Redis, init_redis
 from src.infrastructure.interfaces.cache.unit_of_work import (
     UnitOfWork as RedisUnifOfWork,

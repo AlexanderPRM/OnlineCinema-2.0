@@ -1,6 +1,8 @@
 """Module with project configuration."""
 
-from pydantic import BaseModel
+import logging
+
+import pydantic as pd
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,6 +25,35 @@ class LoggingSettings(BaseServiceSettings):
 
     use_sentry: bool
     sentry_dsn: str
+    logging_level: int
+
+    @pd.field_validator('logging_level', mode='before')
+    @classmethod
+    def convert_level(cls, logging_level: str):
+        """Convert string presentation of logging level to int.
+
+        Args:
+            logging_level (str): String representation of logging level.
+
+        Raises:
+            ValueError: If logging level is not valid.
+
+        Returns:
+            int: Integer representation of logging level.
+        """
+        levels = {
+            'DEBUG': logging.DEBUG,
+            'INFO': logging.INFO,
+            'WARNING': logging.WARNING,
+            'ERROR': logging.ERROR,
+            'CRITICAL': logging.CRITICAL,
+        }
+        try:
+            return levels.get(logging_level.upper())
+        except KeyError:
+            raise ValueError(
+                'Invalid logging level: {value}'.format(value=logging_level),
+            )
 
 
 class APISettings(BaseServiceSettings):
@@ -70,7 +101,7 @@ class TokensSettings(BaseServiceSettings):
     refresh_token_expiration: int
 
 
-class ProjectSettings(BaseModel):
+class ProjectSettings(pd.BaseModel):
     """Project configuration."""
 
     user_settings: UserSettings = UserSettings()

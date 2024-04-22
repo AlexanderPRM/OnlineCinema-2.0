@@ -2,7 +2,6 @@
 
 from http import HTTPStatus
 
-from containers import Container
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 from src.api.user.exceptions import (
@@ -10,6 +9,7 @@ from src.api.user.exceptions import (
     CREDENTIAL_OR_PASSWORD_NOT_CORRECT,
     USER_ALREADY_EXISTS,
 )
+from src.containers import Container
 from src.domain.repositories.role.exceptions import BaseRoleNotFoundError
 from src.domain.repositories.user.exceptions import (
     UserAlreadyExists,

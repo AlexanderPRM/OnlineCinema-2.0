@@ -1,13 +1,31 @@
 """Module with API entry point."""
 
+import logging
 from contextlib import asynccontextmanager
 
-from config import APISettings, LoggingSettings
-from containers import Container
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from src import api
 from src.api.routers import init_routers
+from src.config import APISettings, LoggingSettings
+from src.containers import Container
+from src.logging import get_logging_config
+
+
+def setup_logging():
+    """Set logging configuration."""
+    logging_config = LoggingSettings()
+
+    logging.config.dictConfig(get_logging_config())
+
+    if logging_config.use_sentry:
+        import sentry_sdk  # noqa: WPS433 (Nested Import)
+
+        sentry_sdk.init(
+            dsn=logging_config.sentry_dsn,
+            traces_sample_rate=1.0,
+            profiles_sample_rate=1.0,
+        )
 
 
 @asynccontextmanager
@@ -20,20 +38,10 @@ async def lifespan(app: FastAPI):
     Yields:
         None: None. :)
     """
+    setup_logging()
     async with Container.lifespan(wireable_packages=[api]):
         yield
 
-
-log_config = LoggingSettings()
-
-if log_config.use_sentry:
-    import sentry_sdk  # noqa: WPS433 (Nested Import)
-
-    sentry_sdk.init(
-        dsn=log_config.sentry_dsn,
-        traces_sample_rate=1.0,
-        profiles_sample_rate=1.0,
-    )
 
 config = APISettings()
 
