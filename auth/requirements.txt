@@ -25,3 +25,4 @@ uvicorn==0.29.0
 dependency-injector==4.41.0
 
 python-json-logger==2.0.7
+anyio>=4.4.0 # not directly required, pinned by Snyk to avoid a vulnerability
